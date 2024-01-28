@@ -8,6 +8,7 @@
 }
 :root{
     --bg-color: #f7f3f5;
+    --light-bg-color: #e6dee1;
     --btn-color: #687477;
     --bgLightColor: #e2c2b3;
     --nextColor: #403234;
@@ -26,11 +27,19 @@ section{
     justify-content: center;
     scroll-snap-align: start;
 }
-.home{
-    position: relative;
+
+header{
+    position: fixed;
+    width: 99%;
+    height: 80px;
+    background: var(--light-bg-color);
+    display: flex;
+    justify-content: center;
+    border-bottom-right-radius: 1.7rem;
+    border-bottom-left-radius: 1.7rem;
 }
 .navigation{
-    position: fixed;
+    position: relative;
     top: 1px;
     width: 350px;
     height: 80px;
@@ -125,7 +134,7 @@ section{
     top: 80px;
     width: 100%;
     height: calc(100% - 80px);
-    background: var(--bgLightColor);
+    background: inherit;
     display: flex;
     justify-content: center;
     align-items: center;
