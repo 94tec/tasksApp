@@ -633,10 +633,6 @@ header{
     animation-delay: calc(var(--i) * -0.5s);
 }
 
-
-.finishedTasks{
-    /* background: #333; */
-}
 .task-pane{
     position: relative;
     top: 80px;
@@ -645,7 +641,7 @@ header{
     height: calc(100% - 80px);
     margin: 0 auto;
     padding: 10px;
-    background: #cdd6d8;
+    background: inherit;
    
     display: grid;
     grid-template-areas: 
@@ -665,14 +661,28 @@ header{
 }
 .task-pane .top-widget{
     grid-area: top-widget;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #000;
+
 }
 .task-pane .main-widget{
     grid-area: main-widget;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
 }
 .task-pane .aside-widget{
     grid-area: aside-widget;
 }
-
+.task-pane .top-widget .greetings{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
 .footer{
     background: #55838f;
 }

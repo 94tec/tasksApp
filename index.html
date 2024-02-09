@@ -37,11 +37,11 @@
             <div class="login-area">
                 <div class="login-page" id="login-page">
                     <div class="form-container sign-up" >
-                        <form >
+                        <form id="signup-form">
                             <h2>Create Account</h2>
-                            <input type="text" placeholder="Enter your Name">
-                            <input type="text" placeholder="Enter your email">
-                            <input type="text" placeholder="password">
+                            <input id="name" type="text" placeholder="Enter your Name" required>
+                            <input id="email" type="email" placeholder="Enter your email" required>
+                            <input id="password" type="password" placeholder="password" required>
                             <button>Sign Up</button>
                         </form>
                     </div>
@@ -131,10 +131,48 @@
         <section class = "finishedTasks">
             <div class="task-pane">
                 <div class="top-widget">
-                    <h2>Header</h2>
+                    <div class="greetings">
+                        <H2>Hello <span>Fixtone</span></H2>
+                        <h4>You've Got 9 tasks today</h4>
+                    </div>
+                    <input type="button" value="Add a Task">
+                    <div class="profile-account">
+                        <h2>Fixtone Kaloki</h2>
+                        <h2>fixtone94tec@gmail.com</h2>
+                    </div>
                 </div>
                 <div class="main-widget">
-                    <h2>Main Content</h2>
+                    <div class="main-table">
+                        <div class="table-header">
+                            <h2>Your Tasks</h2>
+                        </div>
+                        <div class="table-body">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Date </th>
+                                        <th>Completion Date</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Hit to the Gym</td>
+                                        <td>1/29/2024</td>
+                                        <td>1/29/2024</td>
+                                        <td><p>Completed</p></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Finish Client 3 Job</td>
+                                        <td>1/29/2024</td>
+                                        <td>2/29/2024</td>
+                                        <td><p>Pending</p></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
                 <div class="aside-widget">
                     <h2>aside</h2>
@@ -145,8 +183,10 @@
             <h1>Footer Page</h1>
         </section>
     </div>
+    
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="auth.js" type="module"></script>
     <script src="script.js"></script>
 </body>
 </html>
