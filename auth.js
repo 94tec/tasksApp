@@ -1,4 +1,8 @@
-import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { 
+    getAuth, 
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getDatabase, set, ref } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
@@ -21,13 +25,28 @@ const firebaseConfig = {
 const signupForm = document.getElementById('signup-form');
 signupForm.addEventListener('submit', (e)=>{
     e.preventDefault();
-    const name = signupForm['name'].value;
     const email = signupForm['email'].value;
     const password = signupForm['password'].value;
     
     createUserWithEmailAndPassword(auth, email, password)
     .then(cred =>{
         console.log(cred.user);
+        alert("User Created Successful");
+    });
+    
+})
+
+//login
+const loginForm = document.getElementById('loginForm');
+loginForm.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const email = loginForm['login_email'].value;
+    const password = loginForm['login_password'].value;
+    
+    signInWithEmailAndPassword(auth, email, password)
+    .then(cred =>{
+        console.log(cred.user);
+        alert("User Login");
     });
     
 })
