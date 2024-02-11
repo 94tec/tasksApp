@@ -4,7 +4,9 @@ import {
     signInWithEmailAndPassword
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getDatabase, set, ref } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+import { getDatabase, set, ref,
+    get, child
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -20,6 +22,7 @@ const firebaseConfig = {
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
   const auth = getAuth();
+  const dbRef = ref(db);
 
 //Sign up
 const signupForm = document.getElementById('signup-form');
@@ -38,7 +41,12 @@ signupForm.addEventListener('submit', (e)=>{
             email: email
         })
         alert("User Created Successful");
-    });
+    })
+    .catch((error) => {
+        alert("Failed to create User contact your Adminstrator");
+        console.log(error.code);
+        console.log(error.message);
+    })
     
 })
 
@@ -52,7 +60,21 @@ loginForm.addEventListener('submit', (e)=>{
     signInWithEmailAndPassword(auth, email, password)
     .then(cred =>{
         console.log(cred.user);
-        alert("User Login");
-    });
+        get(child(dbRef, 'users/' + cred.user.uid))
+        .then((snapshot) =>{
+            if (snapshot.exists) {
+                sessionStorage.setItem("user-info", JSON.stringify({
+                    name: snapshot.val().name
+                }))
+                sessionStorage.setItem("user-creds", JSON.stringify(cred.user));
+                console.log(cred.user.uid);
+            }
+        })
+    })
+    .catch((error) => {
+        alert(error.message);
+        console.log(error.code);
+        console.log(error.message);
+    })
     
 })
