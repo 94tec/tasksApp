@@ -18,19 +18,25 @@ const firebaseConfig = {
   };
 
   const app = initializeApp(firebaseConfig);
-  const db = getDatabase();
-  const auth = getAuth(app);
+  const db = getDatabase(app);
+  const auth = getAuth();
 
 //Sign up
 const signupForm = document.getElementById('signup-form');
 signupForm.addEventListener('submit', (e)=>{
     e.preventDefault();
+    const name = signupForm['name'].value
     const email = signupForm['email'].value;
     const password = signupForm['password'].value;
     
     createUserWithEmailAndPassword(auth, email, password)
     .then(cred =>{
-        console.log(cred.user);
+        const user = cred.user;
+        console.log(user);
+        set(ref(db, 'users/' + user.uid), {
+            name: name,
+            email: email
+        })
         alert("User Created Successful");
     });
     
