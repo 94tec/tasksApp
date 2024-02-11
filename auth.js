@@ -67,7 +67,8 @@ loginForm.addEventListener('submit', (e)=>{
                     name: snapshot.val().name
                 }))
                 sessionStorage.setItem("user-creds", JSON.stringify(cred.user));
-                console.log(cred.user.uid);
+                console.log(snapshot.val().name);
+                window.location.href = '#home';
             }
         })
     })

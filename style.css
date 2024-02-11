@@ -14,7 +14,9 @@
     --nextColor: #403234;
 
 }
-
+html{
+    scroll-behavior: smooth;
+}
 .container{
     position: relative;
     height: 100vh;
