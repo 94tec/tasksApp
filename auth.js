@@ -5,7 +5,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getDatabase, set, ref,
-    get, child
+        get, child
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -70,7 +70,7 @@ loginForm.addEventListener('submit', (e)=>{
                 sessionStorage.setItem("user-creds", JSON.stringify(cred.user));
                 console.log(snapshot.val().name);
 
-                window.location.href = '#home';
+                window.location.href = 'index.html';
             }
         })
     })

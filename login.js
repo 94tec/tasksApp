@@ -1,9 +1,7 @@
+//toggle js
 const container = document.getElementById('container');
 const registerBtn = document.getElementById('register');
 const loginBtn = document.getElementById('login');
-
-
-
 
 registerBtn.addEventListener('click', ()=>{
     console.log('active');
@@ -44,7 +42,8 @@ const firebaseConfig = {
 const signupForm = document.getElementById('signup-form');
 signupForm.addEventListener('submit', (e)=>{
     e.preventDefault();
-    const name = signupForm['name'].value
+    const firstName = signupForm['firstname'].value
+    const lastName = signupForm['lastname'].value
     const email = signupForm['email'].value;
     const password = signupForm['password'].value;
     
@@ -53,7 +52,8 @@ signupForm.addEventListener('submit', (e)=>{
         const user = cred.user;
         console.log(user);
         set(ref(db, 'users/' + user.uid), {
-            name: name,
+            firstname: firstName,
+            lastname: lastName,
             email: email
         })
         alert("User Created Successful");
@@ -85,8 +85,8 @@ loginForm.addEventListener('submit', (e)=>{
                 }))
                 sessionStorage.setItem("user-creds", JSON.stringify(cred.user));
                 console.log(snapshot.val().name);
-
-                window.location.href = '#home';
+                loginForm.reset();
+                window.location.href = 'index.html';
             }
         })
     })
