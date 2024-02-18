@@ -7,15 +7,18 @@
     font-family: 'Montserrat', sans-serif;
 }
 :root{
-    --bg-color: #f7f3f5;
-    --light-bg-color: #e6dee1;
-    --btn-color: #687477;
-    --bgLightColor: #e2c2b3;
+    --bg-color:  linear-gradient(120deg, #f1eef3, #e2e5f0);
+    --home-bg-color: linear-gradient(120deg, #181820, #222535);
+    --btn-color:  linear-gradient(120deg, #9741cc, #253caf);
+    --primaryBgColor:  linear-gradient(120deg, #222535, #0a0f14);
     --nextColor: #403234;
 
 }
 html{
     scroll-behavior: smooth;
+}
+body {
+    background: var(--bg-color);
 }
 .container{
     position: relative;
@@ -33,16 +36,16 @@ section{
 }
 .home{
     overflow-x: hidden;
+    background: var(--home-bg-color);
 }
 header{
     position: fixed;
     width: 99%;
     height: 80px;
-    background: var(--light-bg-color);
     display: flex;
     justify-content: center;
-    border-bottom-right-radius: 1.7rem;
-    border-bottom-left-radius: 1.7rem;
+    border-radius: 8px;
+    box-shadow: 5px 5px 5px  rgba(173, 167, 167, 0.6);
 }
 .navigation{
     position: relative;
@@ -65,6 +68,7 @@ header{
     list-style: none;
     width: 80px;
     height: 80px;
+
 }
 .navigation ul li a{
     position: relative;
@@ -75,6 +79,7 @@ header{
     width: 100%;
     text-align: center;
     font-weight: 500;
+
 }
 .navigation ul li a .icon{
     position: relative;
@@ -83,25 +88,25 @@ header{
     font-size: 1.5em;
     transition: 0.5s;
     text-align: center;
-    color: var(--btn-color);
+    color: #fff;
 }
 .navigation ul li a:hover .icon{
-    color: var(--nextColor);
+    color: var(--btn-color);
 }
 .navigation ul li.active a .icon{
-    color: var(--nextColor);
+    color: var(--btn-color);
     transform: translateY(-8px);
 }
 .navigation ul li a .text{
     position: absolute;
     font-weight: 600;
     font-size: 0.7em;
-    color: var(--nextColor);
     text-transform: uppercase;
     transform: translateY(0px);
     letter-spacing: 0.05em;
     opacity: 0;
     z-index: 10;
+    color: #fff;
 
 }
 .navigation ul li.active a .text{
@@ -126,7 +131,7 @@ header{
     bottom: 14px;
     width: 100%;
     height: 16px;
-    background: var(--bgLightColor);
+    background: var(--btn-color);
     border-radius: 0.75rem;
 }
 .navigation ul li:nth-child(2).active ~ .indicator{
@@ -143,8 +148,6 @@ header{
     height: calc(100% - 80px);
     margin: 0 auto;
     padding: 10px;
-    background: inherit;
-   
     display: grid;
     grid-template-areas: 
     'top-widget top-widget aside-widget'
@@ -159,14 +162,13 @@ header{
 .dashboard .aside-widget{
     color: #fff;
     padding: 20px;
-    border: 1px skyblue solid; 
+    /* border: 1px skyblue solid;  */
 }
 .dashboard .top-widget{
     position: relative;
     grid-area: top-widget;
     width: 100%;
     display: flex;
-    background: #1b1a1c;
     padding: 5px;
      
 }
@@ -196,9 +198,7 @@ header{
     row-gap: 10px;
     padding: 10px;
 }
-.dashboard .top-widget .tasks-status-container .statusList .tasks h4{
-    text-align: center;
-}
+
 .dashboard .top-widget .tasks-status-container .statusList .tasks .task-icon{
     position: relative;
     width:100%;
@@ -216,20 +216,22 @@ header{
     right: 16px;
     width: 25px;
     height: 25px;
-    background-color: #f00;
+    background: var(--btn-color);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 12px;
-    color: #0ef;
 }  
 .dashboard .slide-widget{
     position: relative;
     grid-area: main-widget;
     width: 100%;
     display: flex;
-   
+    background: var(--primaryBgColor);
+    /* border: 2px solid #f0e9e9;*/
+    border-radius: 8px; 
+    box-shadow: -5px -5px 5px  rgba(17, 17, 17, 0.4);
 }
 .dashboard .slide-widget .card-container{
     width: 100%;
@@ -252,6 +254,7 @@ header{
     align-items: center;
     flex-direction: column;
     gap: 20px;
+    color: #fff;
     
 }
 
@@ -334,7 +337,6 @@ header{
     position: absolute;
     width: 60px;
     height: 60px;
-    background: #2f2e33;
     border-radius: 50%;
     border: 15px solid #4d4c51;
     box-shadow: inset 0 5px 10px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.75), 0 -2px 2px rgba(255, 255, 255, 0.5),
@@ -391,13 +393,12 @@ header{
 .dashboard .slide-widget .card-content .cards .card-title h4{
     font-family: 'Montserrat';
     font-size: 1.5rem;
-    color: #55838f;
+    color: #fff;
 }
 .dashboard .slide-widget .card-content .cards .card-description{
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 70%;
 }
 .dashboard .slide-widget .card-content .cards .card-action{
     position: absolute;
@@ -408,7 +409,7 @@ header{
     width: 80%;
 }
 .dashboard .slide-widget .card-content .cards .card-action .input{
-    background: #55838f;
+    background: var(--btn-color);
     color: #000;
     border: transparent;
     padding: 8px 24px;
@@ -432,17 +433,21 @@ header{
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    background: #fff;
+    border-radius: 8px;
+    background: transparent;
 }
 
 .dashboard .aside-widget .box span{
     position: absolute;
     inset: 5px;
     border-radius: 8px;
-    background-image: url("/static/images/th.jpeg");
+    box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.75);
+    border-top: 2px solid #fff;
+    border-left: 2px solid #fff;
+    /* background-image: url("/static/images/th.jpeg");
     background-repeat: no-repeat;
     background-position: center;
-    background-size:cover;
+    background-size:cover; */
     z-index: 1; 
 } 
 /* .dashboard .aside-widget .box span i{
@@ -498,6 +503,8 @@ header{
     justify-content: space-between;
     padding: 10px;
     margin-bottom: 20px;
+    box-shadow: 0 2px 0  rgba(173, 167, 167, 0.6);
+    color: #fff;
     cursor: pointer;
    
 }
@@ -507,17 +514,14 @@ header{
 .dashboard .aside-widget .box span .timeline .calender #current_date{
     font-family: 'Montserrat';
     font-size: 22px;
-    color: #0ef;
 
 }
 .dashboard .aside-widget .box span .timeline .calender #current_time{
     font-family: 'Montserrat';
     font-size: 20px;
-    color: #0ef;
-
 }
 .dashboard .aside-widget .box span .timeline .timeline-column .timeline-box{
-    border-left: 2px solid #0ef;
+    border-left: 2px solid #9741cc;
 }
 .dashboard .aside-widget .box span .timeline .timeline-column .timeline-box .timeline-content{
     padding-left: 20px;
@@ -525,7 +529,7 @@ header{
 .dashboard .aside-widget .box span .timeline .timeline-column .timeline-box .timeline-content .content{
     position: relative;
     padding: 10px;
-    border: 2px solid #0ef;
+    border: 2px solid #9741cc;
     border-radius: 8px;
     margin-bottom: 8px;
     transition: all 0.5s ease-out;
@@ -542,11 +546,10 @@ header{
     left: -32px;
     width: 20px;
     height: 20px;
-    background: #0ef;
+    background: #9741cc;
     border-radius: 50%;
 }
 .dashboard .aside-widget .box span .timeline .timeline-column .timeline-box .timeline-content .year{
-    color: #0ef;
     display: flex;
     align-items: center;
 }
@@ -559,12 +562,10 @@ header{
 .dashboard .aside-widget .box span .timeline .timeline-column .timeline-box .timeline-content h3{
     margin: 8px 0;
     font-size: 18px;
-    color: rgb(116, 222, 230);
 }
 .dashboard .aside-widget .box span .timeline .timeline-column .timeline-box .timeline-content p{
     font-size: 16px;
     font-weight: 500;
-    color: rgb(22, 236, 252);
 }
 .dashboard .aside-widget .box span .timeline .button{
     position: absolute;
@@ -574,7 +575,6 @@ header{
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 2px solid #0ef;
     padding: 4px;
     border-radius: 8px;
     margin-bottom: 8px;
@@ -583,7 +583,7 @@ header{
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    background: inherit;
+    background: var(--btn-color);
 }
 .dashboard .aside-widget .box span .timeline .button #show-add-form ion-icon{
     font-size: 30px;
