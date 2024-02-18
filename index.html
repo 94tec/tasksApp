@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task Manager || Manage your Tasks</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.0/js/dataTables.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.0/css/dataTables.dataTables.css" />
+  
+    <!-- Swiper css -->
+    <link rel="stylesheet" href="swiper-bundle.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -34,114 +40,257 @@
                     </ul>
                 </div>
             </header>
-            <!-- <div class="container-ring">
-                <div class="ring r01"></div>
-                <div class="ring r02"></div>
-                <div class="ring r03"></div>
-                <div class="ring r04"></div>
-                <div class="ring r051"></div>
-                <div class="ring r052"></div>
-                    <div class="ring r06"></div>
-                    <div class="ring r07"></div>
-                    <div class="ring r08"></div>
-                    <div class="ring r09"></div>
-                </div>
-                <div class="container-ring2">
-                    <div class="ring r01"></div>
-                    <div class="ring r02"></div>
-                    <div class="ring r03"></div>
-                    <div class="ring r04"></div>
-                    <div class="ring r051"></div>
-                    <div class="ring r052"></div>
-                    <div class="ring r06"></div>
-                    <div class="ring r07"></div>
-                    <div class="ring r08"></div>
-                    <div class="ring r09"></div>
-                </div>
-                <div class="container-cup">
-                    <div class="plate"></div>
-                    <div class="cup">
-                        <div class="top-part">
-                            <div class="vapour">
-                                <span style="--i:1;"></span>
-                                <span style="--i:3;"></span>
-                                <span style="--i:16;"></span>
-                                <span style="--i:5;"></span>
-                                <span style="--i:13;"></span>
-                                <span style="--i:20;"></span>
-                                <span style="--i:6;"></span>
-                                <span style="--i:7;"></span>
-                                <span style="--i:10;"></span>
-                                <span style="--i:8;"></span>
-                                <span style="--i:17;"></span>
-                                <span style="--i:11;"></span>
-                                <span style="--i:12;"></span>
-                                <span style="--i:14;"></span>
-                                <span style="--i:2;"></span>
-                                <span style="--i:9;"></span>
-                                <span style="--i:18;"></span>
-                                <span style="--i:4;"></span>
-                                <span style="--i:15;"></span>
-                                <span style="--i:19;"></span> 
+            <div class="dashboard">
+                <div class="top-widget">
+                    <div class="tasks-status-container">
+                        <div class="salutation">
+                            <h4>Hello, <span>Fixtone</span></h4>
+                        </div>
+                        <div class="statusList">
+                            <div class=" tasks total-tasks">
+                                <h4>Total Tasks</h4>
+                                <div class="task-icon"><img src="task.png" alt="" srcset=""><span>23</span></div>
                             </div>
-                            <div class="circle">
-                                <div class="tea"></div>
+                            <div class=" tasks pending-tasks">
+                                <h4>Ongoing</h4>
+                                <div class="task-icon"><img src="automation.png" alt="" srcset=""><span>8</span></div>
+                            </div>
+                            <div class=" tasks pending-tasks">
+                                <h4>Pending </h4>
+                                <div class="task-icon"><img src="pending-tasks.png" alt="" srcset=""><span>11</span></div>
+                            </div>
+                            <div class=" tasks completed-tasks">
+                                <h4>Completed</h4>
+                                <div class="task-icon"><img src="completed-task.png" alt="" srcset=""><span>4</span></div>
                             </div>
                         </div>
-                        <div class="handle"></div>
                     </div>
                 </div>
-            </div> -->
+                <div class="slide-widget">
+                    <div class="card-container">
+                        <div class="card-content swiper">
+                        <!-- Additional required wrapper -->
+                            <div class="swiper-wrapper">
+                        <!-- Slides -->
+                                <div class=" cards swiper-slide">
+                                    <!-- <div class="card-lines">
+                                        <span ></span>
+                                        <span ></span>
+                                        <span ></span>
+                                        <span ></span>
+                                    </div> -->
+                                    <div class="deadline-count-down">
+                                        <div id="time">
+                                            <div class="circle" style="--clr: #1eb9ff;">
+                                                <svg>
+                                                    <circle cx = "45" cy = "45" r = "45" id = "dd"></circle>
+                                                </svg>
+                                                <div id="days">00 <br> <span>Days</span></div>
+                                            </div>
+                                            <div class="circle" style="--clr: #ff2972;">
+                                                <svg>
+                                                    <circle  cx = "45" cy = "45" r = "45" id = "hh"></circle>
+                                                </svg>
+                                                <div id="hours">00 <br> <span>Hours</span></div>
+                                            </div>
+                                            <div class="circle" style="--clr: #fee800;">
+                                                <svg>
+                                                    <circle  cx = "45" cy = "45" r = "45" id = "mm"></circle>
+                                                </svg>
+                                                <div id="minutes">00 <br> <span>Minutes</span></div>
+                                            </div>
+                                            <div class="circle" style="--clr: #04fc43;">
+                                                <svg>
+                                                    <circle  cx = "45" cy = "45" r = "45" id = "ss"></circle>
+                                                </svg>
+                                                <div id="seconds">00 <br> <span>Seconds</span></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-title">
+                                        <h4 class="id">Task ID</h4>
+                                        <h4 class="task-title">Wireframes</h4>
+                                    </div>
+                                    <div class="card-description">
+                                        <p>All the frames are designed and connected</p>
+                                    </div>
+                                    <div class="card-action">
+                                        <p>Start time: 12/3/2024 <span>12:34:33</span></p>
+                                        <p>Due time: 14/3/2024 <span>12:34:33</span></p>
+                                        <input type="button" value="view" class="input">
+                                    </div>
+                                </div>
+                                <div class="swiper-slide">Slide 2</div>
+                                <div class="swiper-slide">Slide 3</div>
+                                ...
+                                <!-- If we need pagination -->
+                                <div class="swiper-pagination"></div>
+                                <!-- If we need navigation buttons -->
+                                <div class="swiper-button-prev"></div>
+                                <div class="swiper-button-next"></div>
+                                <!-- If we need scrollbar -->
+                                <div class="swiper-scrollbar"></div> 
+                            </div>
+                        </div>   
+                    </div>    
+                </div>
+                <div class="aside-widget">
+                    <div class="box">
+                        <span>
+                            <div class="timeline">
+                                <div class="calender">
+                                    <p id = "current_date"></p>
+                                    <p id = "current_time"></p>
+                                </div> 
+                                <div class="timeline-column">
+                                    <div class="timeline-box">
+                                        <div class="timeline-content">
+                                            <div class="content"> 
+                                                <div class="year"><ion-icon name="calendar-outline"></ion-icon> 2024 - 2024 <h4>04:00 AM</h4></div>
+                                                <h3>Wake Up</h3>
+                                                <p>Hit to the Gym</p>
+                                            </div>
+                                            <div class="content">
+                                                <div class="year"><ion-icon name="calendar-outline"></ion-icon> 2024 - 2024 <h4>04:00 AM</h4></div>
+                                                <h3>Meeting with client 0a1</h3>
+                                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae iusto eius sunt culpa ullam vitae voluptas debitis ut, </p>
+                                            </div>
+                                            <div class="content">
+                                                <div class="year"><ion-icon name="calendar-outline"></ion-icon> 2024 - 2024 <h4>04:00 AM</h4></div>
+                                                <h3>Design a login Form</h3>
+                                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae iusto eius sunt culpa ullam vitae voluptas debitis ut, </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="button">
+                                    <button type="button" id="show-add-form"><ion-icon name="add-outline"></ion-icon></button>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+            </div>
         </section>
         <section id = "home" class = "finishedTasks">
             <div class="task-pane">
-                <div class="top-widget">
-                    <div class="greetings">
-                        <H2>Hello <span>Fixtone</span></H2>
-                        <h4>You've Got 9 tasks today</h4>
-                    </div>
-                    <input type="button" value="Add a Task">
-                    <div class="profile-account">
-                        <h2>Fixtone Kaloki</h2>
-                        <h2>fixtone94tec@gmail.com</h2>
-                    </div>
+                <div class="top-widget">    
                 </div>
                 <div class="main-widget">
-                    <div class="main-table">
-                        <div class="table-header">
-                            <h2>Your Tasks</h2>
-                        </div>
-                        <div class="table-body">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Date </th>
-                                        <th>Completion Date</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Hit to the Gym</td>
-                                        <td>1/29/2024</td>
-                                        <td>1/29/2024</td>
-                                        <td><p>Completed</p></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Finish Client 3 Job</td>
-                                        <td>1/29/2024</td>
-                                        <td>2/29/2024</td>
-                                        <td><p>Pending</p></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    <table id="task-table" class="display">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Time Created</th>
+                                <th>ID</th>
+                                <th>Task Name</th>
+                                <th>Description</th>
+                                <th>Start Date</th>
+                                <th>Due Date</th>
+                                <th>Action</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>22/2/2024</td>
+                                <td>04:20PM</td>
+                                <td>1E33t34ffgD</td>
+                                <td>Design Wireframes </td>
+                                <td>all Frames deigned nad connected</td>
+                                <td>11:00am</td>
+                                <td>14:24pm</td>
+                                <td>pending</td>
+                                <td><span>delete</span> <span>edit</span></td>
+                            </tr>
+                            <tr>
+                                <td>22/2/2024</td>
+                                <td>04:20PM</td>
+                                <td>1E33t34ffgD</td>
+                                <td>Design Wireframes </td>
+                                <td>all Frames deigned nad connected</td>
+                                <td>11:00am</td>
+                                <td>14:24pm</td>
+                                <td>pending</td>
+                                <td><span>delete</span> <span>edit</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
                 <div class="aside-widget">
                     <h2>aside</h2>
                 </div>
+            </div>
+            <div class="add-task-container">
+                <div class = "h">Add new task
+                    <span class="close"><ion-icon name="close-outline"></ion-icon></span>
+                </div>
+                <form class = "form">
+                    <div class = "input-box">
+                        <label>Task Title</label>
+                        <input type="text" placeholder="Enter Your Task">
+                    </div>
+                    <div class = "input-box">
+                        <label>Task Description</label>
+                        <textarea type="text" placeholder="What's your task about"></textarea>
+                    </div>
+                    <div class = "collumn">
+                       
+                        <div class = "input-box">
+                            <label>Start Date</label>
+                            <input type="datetime-local" placeholder="Enter Your Task">
+                        </div>
+                        <div class = "input-box">
+                            <label>Deadline</label>
+                            <input type="datetime-local" placeholder="Enter Your Task">
+                        </div>
+                    </div>
+                    <div class="collumn2">
+                        <div class = "select-menu">
+                            <div class = "select-btn" id="select-btn">
+                                <label id="text">Priority</label>
+                                <ion-icon name="chevron-down-outline"></ion-icon>
+                            </div>
+                            <ul class="list">
+                                <li class="option" style="--i:3">
+                                    <ion-icon name="trending-up-outline" class="icon"></ion-icon>
+                                    <span class="option-text">High</span>
+                                </li>
+                                <li class="option" style="--i:2">
+                                    <ion-icon name="barbell-outline" class="icon"></ion-icon>
+                                    <span class="option-text">Medium</span>
+                                </li>
+                                <li class="option" style="--i:1">
+                                    <ion-icon name="trending-down-outline" class="icon"></ion-icon>
+                                    <span class="option-text">Low</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class = "select-menu">
+                            <div class = "select-btn" id="select_btn">
+                                <label id="option-name">Working on</label>
+                                <ion-icon name="chevron-down-outline"></ion-icon>
+                            </div>
+                            <ul class="list">
+                                <li class="option" id="statusOption" style="--i:3">
+                                    <ion-icon name="trending-up-outline" class="icon"></ion-icon>
+                                    <span class="option-text">Start Now</span>
+                                </li>
+                                <li class="option" id="statusOption" style="--i:2">
+                                    <ion-icon name="barbell-outline" class="icon"></ion-icon>
+                                    <span class="option-text">Later</span>
+                                </li>
+                                <li class="option" id="statusOption" style="--i:1">
+                                    <ion-icon name="trending-down-outline" class="icon"></ion-icon>
+                                    <span class="option-text">On Prgress</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="save-btn" >
+                            <button>Add</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </section>
         <section id="footer" class = "footer">
@@ -154,4 +303,6 @@
     <script src="auth.js" type="module"></script>
     <script src="script.js"></script>
 </body>
+<!-- Swiper js -->
+    <script src="swiper-bundle.min.js"></script>
 </html>
