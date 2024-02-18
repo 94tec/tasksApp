@@ -104,11 +104,6 @@ for(selects of statusOption) {
     }
 }
 
-//seleting tables
-$(document).ready( function () {
-    $('#task-table').DataTable();
-} );
-
 
 
 
