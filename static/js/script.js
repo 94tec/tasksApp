@@ -27,7 +27,6 @@ const currentTime = () => {
     const current_date = document.getElementById("current_date");
     let year = date.getFullYear();
     let month = months[date.getMonth()];
-    console.log(month);
     let day = date.getDate();
 
     let cal = `${month}, ${day}  ${year} `;
@@ -103,9 +102,30 @@ for(selects of statusOption) {
         select_btn.classList.remove('active');
     }
 }
+// Showind add new task form
+const addTaskForm =  document.getElementById('show-add-form');
+const addNewForm =  document.getElementById('new-task-form-btn');
+const hideForm = document.getElementById('close');
+addTaskForm.addEventListener('click', () => {
+    console.log('Add new task');
+    showTaskForm();
+});
 
+const showTaskForm = (e) => {
+    e.preventDefault();
+    const backgroundFade = document.getElementById('fade');
+    const taskForm = document.getElementById('taskForm');
+    taskForm.classList.add('showTaskForm');
+    backgroundFade.style.display = 'none';
+};
+addNewForm.addEventListener('click', showTaskForm);
 
-
+hideForm.addEventListener('click', () => {
+    const backgroundFade = document.getElementById('fade');
+    const taskForm = document.getElementById('taskForm');
+    taskForm.classList.remove('showTaskForm');
+    backgroundFade.style.display = 'block';
+});
 
 
 

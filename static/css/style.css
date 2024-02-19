@@ -7,8 +7,8 @@
     font-family: 'Montserrat', sans-serif;
 }
 :root{
-    --bg-color:  linear-gradient(120deg, #ded5e4, #f2f3f7);
-    --home-bg-color: linear-gradient(120deg, #181820, #222535);
+    --bg-color:  linear-gradient(120deg, #cdaae4, #f1f3f7);
+    --home-bg-color: linear-gradient(120deg, #393952, #222535);
     --btn-color:  #9741cc;
     --primaryBgColor:  linear-gradient(120deg, #32343f, #293138);
     --nextColor: #403234;
@@ -42,6 +42,10 @@ section{
 .finishedTasks{
     width: 100%;
     background: var(--bg-color);
+}
+.footer{
+    width: 100%;
+    background: var(--home-bg-color);
 }
 header{
     position: fixed;
@@ -576,7 +580,7 @@ header{
     font-size: 16px;
     font-weight: 500;
 }
-.dashboard .aside-widget .box span .timeline .button{
+.dashboard .aside-widget .box span .timeline a{
     position: absolute;
     bottom: 0;
     width: 50px;
@@ -588,13 +592,13 @@ header{
     border-radius: 8px;
     margin-bottom: 8px;
 }
-.dashboard .aside-widget .box span .timeline .button #show-add-form{
+.dashboard .aside-widget .box span .timeline a #show-add-form{
     width: 100%;
     height: 100%;
     border-radius: 50%;
     background: var(--btn-color);
 }
-.dashboard .aside-widget .box span .timeline .button #show-add-form ion-icon{
+.dashboard .aside-widget .box span .timeline a #show-add-form ion-icon{
     font-size: 30px;
     color: #fff;
 }
@@ -737,16 +741,22 @@ header{
 .add-task-container{
     position: absolute;
     max-width: 700px;
-    top: 50%;
+    top: 0;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scale(0.1);
     width: 100%;
     border-radius: 8px;
-    background: #374634;
+    background: var(--primaryBgColor);
     color: #fff;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 15px rgba(243, 242, 242, 0.1);
     padding: 20px;
-    visibility: hidden;
+    visibility: hidden; 
+    transition: all 0.5s ease-in-out;
+}
+.showTaskForm{
+    top: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    visibility: visible;
 }
 .add-task-container .h{
     font-size: 1.5rem;
@@ -891,10 +901,7 @@ header{
     justify-content: center;
     align-items: center;
     height: 40px;
-    background-color: #1bad75;
     color: #1f1b1b;
-    padding: 10px;
-    border-radius: 8px;
     cursor: pointer;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
@@ -903,13 +910,20 @@ header{
     padding: 8px 16px;
     border: none;
     outline: 0;
-    background: transparent;
+    background: var(--btn-color);
+    border-radius: 8px;
     color: #f0e7e7;
 } 
 
 
-.footer{
-    background: #55838f;
+.footer-pane{
+    position: relative;
+    top: 80px;
+    width: 100%;
+    height: calc(100% - 80px);
+    margin: 0 auto;
+    padding: 10px;
+   
 }
 @keyframes animate {
     0%{

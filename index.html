@@ -162,9 +162,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="button">
+                                <a href="#home">
                                     <button type="button" id="show-add-form"><ion-icon name="add-outline"></ion-icon></button>
-                                </div>
+                                </a>
                             </div>
                         </span>
                     </div>
@@ -178,7 +178,7 @@
                         <button type="button" id="new-task-form-btn"><ion-icon name="add-outline"></ion-icon></button>
                     </div>
                 </div>
-                <div class="main-widget-list">
+                <div class="main-widget-list" id="fade">
                     <div class="table-header">
                         <table cellpadding = "0" cellspacing ="0" border="0">
                             <thead>
@@ -188,10 +188,11 @@
                                     <th>Task Id</th>
                                     <th>Task Name</th>
                                     <th>Description</th>
+                                    <th>Priority</th>
                                     <th>Start Date</th>
                                     <th>Due Date</th>
-                                    <th>Action</th>
                                     <th>Status</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                         </table>
@@ -205,6 +206,7 @@
                                     <td>1E33t34ffgD</td>
                                     <td>Design Wireframes </td>
                                     <td>all Frames deigned nad connected</td>
+                                    <td>Low</td>
                                     <td>11:00am</td>
                                     <td>14:24pm</td>
                                     <td>pending</td>
@@ -216,6 +218,7 @@
                                     <td>1E33t34ffgD</td>
                                     <td>Design Wireframes </td>
                                     <td>all Frames deigned nad connected</td>
+                                    <td>Low</td>
                                     <td>11:00am</td>
                                     <td>14:24pm</td>
                                     <td>pending</td>
@@ -227,6 +230,7 @@
                                     <td>1E33t34ffgD</td>
                                     <td>Design Wireframes </td>
                                     <td>all Frames deigned nad connected</td>
+                                    <td>Low</td>
                                     <td>11:00am</td>
                                     <td>14:24pm</td>
                                     <td>pending</td>
@@ -238,6 +242,7 @@
                                     <td>1E33t34ffgD</td>
                                     <td>Design Wireframes </td>
                                     <td>all Frames deigned nad connected</td>
+                                    <td>Low</td>
                                     <td>11:00am</td>
                                     <td>14:24pm</td>
                                     <td>pending</td>
@@ -249,6 +254,7 @@
                                     <td>1E33t34ffgD</td>
                                     <td>Design Wireframes </td>
                                     <td>all Frames deigned nad connected</td>
+                                    <td>Low</td>
                                     <td>11:00am</td>
                                     <td>14:24pm</td>
                                     <td>pending</td>
@@ -260,6 +266,7 @@
                                     <td>1E33t34ffgD</td>
                                     <td>Design Wireframes </td>
                                     <td>all Frames deigned nad connected</td>
+                                    <td>Low</td>
                                     <td>11:00am</td>
                                     <td>14:24pm</td>
                                     <td>pending</td>
@@ -271,6 +278,7 @@
                                     <td>1E33t34ffgD</td>
                                     <td>Design Wireframes </td>
                                     <td>all Frames deigned nad connected</td>
+                                    <td>Low</td>
                                     <td>11:00am</td>
                                     <td>14:24pm</td>
                                     <td>pending</td>
@@ -282,6 +290,7 @@
                                     <td>1E33t34ffgD</td>
                                     <td>Design Wireframes </td>
                                     <td>all Frames deigned nad connected</td>
+                                    <td>Low</td>
                                     <td>11:00am</td>
                                     <td>14:24pm</td>
                                     <td>pending</td>
@@ -293,6 +302,7 @@
                                     <td>1E33t34ffgD</td>
                                     <td>Design Wireframes </td>
                                     <td>all Frames deigned nad connected</td>
+                                    <td>Low</td>
                                     <td>11:00am</td>
                                     <td>14:24pm</td>
                                     <td>pending</td>
@@ -304,6 +314,7 @@
                                     <td>1E33t34ffgD</td>
                                     <td>Design Wireframes </td>
                                     <td>all Frames deigned nad connected</td>
+                                    <td>Low</td>
                                     <td>11:00am</td>
                                     <td>14:24pm</td>
                                     <td>pending</td>
@@ -317,9 +328,9 @@
                     <h2>aside</h2>
                 </div>
             </div>
-            <div class="add-task-container">
+            <div class="add-task-container" id="taskForm">
                 <div class = "h">Add new task
-                    <span class="close"><ion-icon name="close-outline"></ion-icon></span>
+                    <span class="close" id="close"><ion-icon name="close-outline"></ion-icon></span>
                 </div>
                 <form class = "form">
                     <div class = "input-box">
@@ -390,7 +401,9 @@
             </div>
         </section>
         <section id="footer" class = "footer">
-            <h1>Footer Page</h1>
+            <div class="footer-pane">
+                <h1>Footer Page</h1>
+            </div>
         </section>
     </div>
     
