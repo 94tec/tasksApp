@@ -1,5 +1,14 @@
+const list = document.querySelectorAll('.list');
+function activeLink () {
+    list.forEach((item) => 
+    item.classList.remove('active'));
+    this.classList.add('active');
+}
+list.forEach((item) =>
+item.addEventListener("click", activeLink));
+
 //toggle js
-const container = document.getElementById('container');
+const container = document.getElementById('login_container');
 const registerBtn = document.getElementById('register');
 const loginBtn = document.getElementById('login');
 
@@ -11,6 +20,19 @@ loginBtn.addEventListener('click', ()=>{
     container.classList.remove("active");
 });
 
+const hideContainer= document.querySelector('.hide-btn');
+const loginButton= document.getElementById('loginBtn');
+const getStartedBtn = document.getElementById('get_started_btn');
+const showLoginContainer = (event) => { 
+    event.preventDefault();
+    container.classList.add('showContainer');
+}
+loginButton.addEventListener('click', showLoginContainer);
+getStartedBtn.addEventListener('click', showLoginContainer);
+
+hideContainer.addEventListener('click', () =>{
+    container.classList.remove('showContainer');
+});
 // firebase Set up
 import { 
     getAuth, 
@@ -97,3 +119,6 @@ loginForm.addEventListener('submit', (e)=>{
     })
     
 })
+
+
+ 

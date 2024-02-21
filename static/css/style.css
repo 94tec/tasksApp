@@ -12,7 +12,6 @@
     --btn-color:  #9741cc;
     --primaryBgColor:  linear-gradient(120deg, #32343f, #293138);
     --nextColor: #403234;
-
 }
 html{
     scroll-behavior: smooth;
@@ -669,6 +668,9 @@ header{
     outline: none;
     border: none;
 }
+.task-pane .top-nav .new-task #new-task-form-btn:hover{
+    opacity: .8;
+}
 .task-pane .top-nav .new-task #new-task-form-btn ion-icon{
     font-size: 30px;
     color: #fff;
@@ -914,8 +916,6 @@ header{
     border-radius: 8px;
     color: #f0e7e7;
 } 
-
-
 .footer-pane{
     position: relative;
     top: 80px;
@@ -925,7 +925,7 @@ header{
     padding: 10px;
    
 }
-@keyframes animate {
+/* @keyframes animate {
     0%{
         transform: translateY(0) scaleX(1);
         opacity: 0;
@@ -953,9 +953,4 @@ header{
         z-index: 5;
     }
     
-}
-@keyframes anime {
-    to{
-        rotate: 360deg;
-    }
-}
+} */

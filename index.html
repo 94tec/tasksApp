@@ -335,41 +335,41 @@
                 <form class = "form">
                     <div class = "input-box">
                         <label>Task Title</label>
-                        <input type="text" placeholder="Enter Your Task">
+                        <input type="text" placeholder="Enter Your Task" id="task_title">
                     </div>
                     <div class = "input-box">
                         <label>Task Description</label>
-                        <textarea type="text" placeholder="What's your task about"></textarea>
+                        <textarea type="text" placeholder="What's your task about" id="text_area"></textarea>
                     </div>
                     <div class = "collumn">
                        
                         <div class = "input-box">
                             <label>Start Date</label>
-                            <input type="datetime-local" placeholder="Enter Your Task">
+                            <input type="datetime-local" placeholder="Enter Your Task" id="startTime">
                         </div>
                         <div class = "input-box">
                             <label>Deadline</label>
-                            <input type="datetime-local" placeholder="Enter Your Task">
+                            <input type="datetime-local" placeholder="Enter Your Task" id="endTime">
                         </div>
                     </div>
                     <div class="collumn2">
                         <div class = "select-menu">
                             <div class = "select-btn" id="select-btn">
-                                <label id="text">Priority</label>
+                                <label for="option" id="text">Priority</label>
                                 <ion-icon name="chevron-down-outline"></ion-icon>
                             </div>
                             <ul class="list">
-                                <li class="option" style="--i:3">
+                                <li class="option"  style="--i:1">
                                     <ion-icon name="trending-up-outline" class="icon"></ion-icon>
-                                    <span class="option-text">High</span>
+                                    <span class="option-text" id="option">High</span>
                                 </li>
                                 <li class="option" style="--i:2">
                                     <ion-icon name="barbell-outline" class="icon"></ion-icon>
-                                    <span class="option-text">Medium</span>
+                                    <span class="option-text" id="option">Medium</span>
                                 </li>
                                 <li class="option" style="--i:1">
                                     <ion-icon name="trending-down-outline" class="icon"></ion-icon>
-                                    <span class="option-text">Low</span>
+                                    <span class="option-text" id="option">Low</span>
                                 </li>
                             </ul>
                         </div>
@@ -402,15 +402,47 @@
         </section>
         <section id="footer" class = "footer">
             <div class="footer-pane">
-                <h1>Footer Page</h1>
+                <div class="container" id="container">
+                    <div class="form-container sign-up" >
+                        <form >
+                            <h2>Create Account</h2>
+                            <input type="text" placeholder="Enter your Name">
+                            <input type="text" placeholder="Enter your email">
+                            <input type="text" placeholder="password">
+                            <button>Sign Up</button>
+                        </form>
+                    </div>
+                    <div class="form-container sign-in" >
+                        <form >
+                            <h2>Login</h2>
+                            <input type="text" placeholder="Enter your email">
+                            <input type="text" placeholder="password">
+                            <button>Sign In</button>
+                        </form>
+                    </div>
+                    <div class="toggle-container">
+                        <div class="toggle">
+                            <div class="toggle-panel toggle-left">
+                                <h2>Manage your Tasks </h2>
+                                <p>Managing Your Tasks helps you Meets Deadline constitently and boost perfomance at large</p>
+                                <p>Enter your details to use all our of site features</p>
+                                <button class="hidden" id="login">Sign In</button>
+                            </div>
+                            <div class="toggle-panel toggle-right">
+                                <h2> Hi Friend! Manage your Tasks </h2>
+                                <p>Register with your personal details to uuse all of site features</p>
+                                <button class="hidden" id="register">Sign Up</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
     </div>
     
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    <script src="/static/js/auth.js" type="module"></script>
-    <script src="/static/js/script.js"></script>
+    <script src="/static/js/script.js" type="module"></script>
 </body>
 <!-- Swiper js -->
     <script src="/static/js/swiper-bundle.min.js"></script>

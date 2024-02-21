@@ -1,3 +1,27 @@
+import { 
+    getAuth, 
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getDatabase, set, ref,
+    get, child
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+    apiKey: "AIzaSyCNtW0n-Hefvxlhq1VeqhDvmhWQQIChSls",
+    authDomain: "taskmanager-346df.firebaseapp.com",
+    projectId: "taskmanager-346df",
+    storageBucket: "taskmanager-346df.appspot.com",
+    messagingSenderId: "593036447381",
+    appId: "1:593036447381:web:0739ae07a5bf6f1cd2159c",
+    measurementId: "G-WR7DT7B4SR"
+};
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const auth = getAuth();
+  const dbRef = ref(db);
+
 const list = document.querySelectorAll('.list');
 function activeLink () {
     list.forEach((item) => 
@@ -6,7 +30,6 @@ function activeLink () {
 }
 list.forEach((item) =>
 item.addEventListener("click", activeLink));
-
 
 // Js Date and time
 const currentTime = () => {
@@ -74,41 +97,43 @@ let x = setInterval(function() {
     
 })
 
-// //add new form js
-const selectBtn = document.getElementById('select-btn');
-const text = document.getElementById('text');
-const option = document.getElementsByClassName('option');
+ //add new form js
+ const selectBtn = document.getElementById('select-btn');
+ const text = document.getElementById('text');
+ const option = document.getElementsByClassName('option');
 
-selectBtn.addEventListener('click',() => {
-    selectBtn.classList.toggle('active');
-});
-for(options of option) {
-    options.onclick = function() {
-        text.innerHTML = this.textContent;
-        selectBtn.classList.remove('active');
-    }
-}
-// option button 2
-const select_btn = document.getElementById('select_btn');
-const selection = document.getElementById('option-name');
-const select = document.getElementById('statusOption');
+ selectBtn.addEventListener('click',() => {
+     selectBtn.classList.toggle('active');
+ });
+ let options = [];
+ for(options of option) {
+     options.onclick = function() {
+         text.innerHTML = this.textContent;
+         selectBtn.classList.remove('active');
+     }
+ }
+ //option button 2
+ const select_btn = document.getElementById('select_btn');
+ const selection = document.getElementById('option-name');
+ const select = document.getElementById('statusOption');
 
-select_btn.addEventListener('click',() => {
-    select_btn.classList.toggle('active');
-});
-for(selects of statusOption) {
-    selects.onclick = function() {
-        selection.innerHTML = this.textContent;
-        select_btn.classList.remove('active');
-    }
+ select_btn.addEventListener('click',() => {
+     select_btn.classList.toggle('active');
+ });
+ let selects = [];
+ for(selects of statusOption) {
+     selects.onclick = function() {
+         selection.innerHTML = this.textContent;
+         select_btn.classList.remove('active');
+     }
 }
+
 // Showind add new task form
 const addTaskForm =  document.getElementById('show-add-form');
 const addNewForm =  document.getElementById('new-task-form-btn');
 const hideForm = document.getElementById('close');
 addTaskForm.addEventListener('click', () => {
     console.log('Add new task');
-    showTaskForm();
 });
 
 const showTaskForm = (e) => {
@@ -117,6 +142,7 @@ const showTaskForm = (e) => {
     const taskForm = document.getElementById('taskForm');
     taskForm.classList.add('showTaskForm');
     backgroundFade.style.display = 'none';
+    console.log('new form');
 };
 addNewForm.addEventListener('click', showTaskForm);
 
@@ -125,6 +151,43 @@ hideForm.addEventListener('click', () => {
     const taskForm = document.getElementById('taskForm');
     taskForm.classList.remove('showTaskForm');
     backgroundFade.style.display = 'block';
+});
+
+// send task form data to the firebase database
+
+const addNewTask = document.querySelector('.form');
+addNewTask.addEventListener('submit', (event)=>{
+    event.preventDefault();
+
+        // Get values from input fields
+        var taskTitle = document.getElementById('task_title').value;
+        var taskDescription = document.getElementById('text_area').value;
+        var startDate = document.getElementById('startTime').value;
+        var deadline = document.getElementById('endTime').value;
+
+        // Get selected values from dropdowns
+        var priority = document.querySelector('.select-menu:nth-child(1) #text').textContent;
+        var status = document.querySelector('.select-menu:nth-child(2)  #option-name').textContent;
+
+        // Output the values (you can modify this according to your needs)
+        console.log('Task Title:', taskTitle);
+        console.log('Task Description:', taskDescription);
+        console.log('Start Date:', startDate);
+        console.log('Deadline:', deadline);
+        console.log('Priority:', priority);
+        console.log('Status:', status);
+
+     // Push data to Firebase database
+     const user = auth.currentUser;
+     set(ref(db, 'tasks' + user.uid), {
+        taskTitle: taskTitle,
+        taskDescription: taskDescription,
+        startDate: startDate,
+        deadline: deadline,
+        priority: priority,
+        status: status
+     })
+     console.log("Data successfully sent to Firebase!");
 });
 
 
