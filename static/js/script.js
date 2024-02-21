@@ -42,16 +42,18 @@ const firebaseConfig = {
 onAuthStateChanged(auth, (user) => {
     if (user) {
       // User is signed in, fetch first name and last name from database
+      const isLoggedIn = document.querySelector('.profile');
       const userId = user.uid;
       const databaseRef = ref(db, 'users/' + userId);
       get(databaseRef).then((snapshot) => {
         if (snapshot.exists()) {
-          let userDisplayName = document.getElementById('user')
           const userData = snapshot.val();
           const firstName = userData.firstname;
           const lastName = userData.lastname;
           console.log(firstName, lastName);
           displayUserInfo(firstName, lastName);
+
+          isLoggedIn.style.display = 'block';
         } else {
           console.log("No data available for this user");
         }
