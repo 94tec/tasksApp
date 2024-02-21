@@ -1,5 +1,5 @@
 import { 
-    getAuth, 
+    getAuth, onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getDatabase, set, ref,
@@ -22,6 +22,51 @@ const firebaseConfig = {
   const auth = getAuth();
   const dbRef = ref(db);
 
+//   onAuthStateChanged(auth, (user) => {
+//     if (user) {
+//         // User is signed in, you can access user info here
+//         const userCredentials = {
+//             uid: user.uid,
+//             email: user.email,
+//             displayName: user.displayName,
+//         // Add other user info properties here if needed
+//         };
+//         console.log(userCredentials);
+          
+//     } else {
+//         // User is signed out
+//         console.log('User is signed out');
+//     } 
+// });
+
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // User is signed in, fetch first name and last name from database
+      const userId = user.uid;
+      const databaseRef = ref(db, 'users/' + userId);
+      get(databaseRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          let userDisplayName = document.getElementById('user')
+          const userData = snapshot.val();
+          const firstName = userData.firstname;
+          const lastName = userData.lastname;
+          console.log(firstName, lastName);
+          displayUserInfo(firstName, lastName);
+        } else {
+          console.log("No data available for this user");
+        }
+      }).catch((error) => {
+        console.error("Error fetching user data:", error);
+      });
+    } else {
+      // User is signed out
+      console.log("User is signed out");
+    }
+  });
+  function displayUserInfo(firstName, lastName) {
+    const userInfoContainer = document.getElementById('user');
+    userInfoContainer.innerHTML = `${firstName} ${lastName}`;
+  }
 const list = document.querySelectorAll('.list');
 function activeLink () {
     list.forEach((item) => 

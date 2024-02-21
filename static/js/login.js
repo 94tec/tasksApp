@@ -37,7 +37,8 @@ hideContainer.addEventListener('click', () =>{
 import { 
     getAuth, 
     createUserWithEmailAndPassword,
-    signInWithEmailAndPassword
+    signInWithEmailAndPassword,
+    onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getDatabase, set, ref,
@@ -99,6 +100,7 @@ loginForm.addEventListener('submit', (e)=>{
     signInWithEmailAndPassword(auth, email, password)
     .then(cred =>{
         console.log(cred.user);
+
         get(child(dbRef, 'users/' + cred.user.uid))
         .then((snapshot) =>{
             if (snapshot.exists) {
