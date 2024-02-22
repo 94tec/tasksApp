@@ -1,3 +1,7 @@
+window.addEventListener('load', () => {
+    console.log('Window loaded successful');
+})
+
 const list = document.querySelectorAll('.list');
 function activeLink () {
     list.forEach((item) => 

@@ -1,5 +1,5 @@
 import { 
-    getAuth, onAuthStateChanged
+    getAuth, onAuthStateChanged, signOut
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getDatabase, set, ref,
@@ -52,7 +52,7 @@ onAuthStateChanged(auth, (user) => {
           const lastName = userData.lastname;
           console.log(firstName, lastName);
           displayUserInfo(firstName, lastName);
-
+          console.log("User data:", userData);
           isLoggedIn.style.display = 'block';
         } else {
           console.log("No data available for this user");
@@ -69,6 +69,52 @@ onAuthStateChanged(auth, (user) => {
     const userInfoContainer = document.getElementById('user');
     userInfoContainer.innerHTML = `${firstName} ${lastName}`;
   }
+
+
+// Get all elements with class "selection"
+const selectionElements = document.querySelectorAll('.selection');
+
+// Add click event listener to each selection element
+selectionElements.forEach((element, index) => {
+    element.addEventListener('click', () => {
+        // Get the text content of the span with class "selected-link"
+        const selectedLinkText = element.querySelector('.selected-link').textContent;
+
+        // Log the text content
+        console.log(`Selection ${index + 1}: ${selectedLinkText}`);
+
+        // Perform actions based on the selected link
+        switch (selectedLinkText) {
+            case 'Edit Profile':
+                // Handle Edit Profile action
+                console.log('Edit Profile selected.');
+                break;
+            case 'Settings':
+                // Handle Settings action
+                console.log('Settings selected.');
+                break;
+            case 'Logout':
+                // Handle Logout action
+                //Sign out user
+                signOut(auth)
+                  .then(() => {
+                    // Sign-out successful.
+                    console.log("User signed out successfully.");
+                  })
+                  .catch((error) => {
+                    // An error happened.
+                    console.error("Error signing out:", error);
+                  });
+                  console.log('Logout selected.');
+                  window.location.href = 'login.html'
+                break;
+            default:
+                // Handle other actions
+                break;
+        }
+    });
+});
+
 const list = document.querySelectorAll('.list');
 function activeLink () {
     list.forEach((item) => 
