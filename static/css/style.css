@@ -795,7 +795,7 @@ header{
 .task-pane .main-widget-list .table-header thead tr th:last-child{
     border-top-right-radius: 8px;
 }
-.task-pane .main-widget-list .display table{
+/* .task-pane .main-widget-list .display table{
     width: 100%;
     height: 435px;
     overflow: scroll;
@@ -812,7 +812,7 @@ header{
     vertical-align: middle;
     font-weight: 500;
     color: #000;
-}
+} */
 
 /* scroll bar */
 ::-webkit-scrollbar{

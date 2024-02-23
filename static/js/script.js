@@ -190,39 +190,33 @@ for(selects of statusOption) {
        const userTasksRef = ref(db, `users/${userId}/tasks`);
   
        // Fetch tasks
-       get(userTasksRef).then((snapshot) => {
-         if (snapshot.exists()) {
-           // Handle task data
-           const tasks = snapshot.val();
-           console.log(tasks);
-          //  rendertables(tasks);
-          const tasksTableBody = document.getElementById('task-table');
-          tasksTableBody.innerHTML = ''; // Clear existing table rows
-  
-          for (const key in tasks) {
-            if (Object.hasOwnProperty.call(tasks, key)) {
-              const task = tasks[key];
-              const row = tasksTableBody.insertRow();
-  
-              // Populate table cells with task data
-              row.insertCell().textContent = task.taskTitle;
-              row.insertCell().textContent = task.taskDescription;
-              row.insertCell().textContent = task.startDate;
-              row.insertCell().textContent = task.deadline;
-              row.insertCell().textContent = task.priority;
-              row.insertCell().textContent = task.status;
-            }
-            else{
-              tasksTableBody.innerHTML = "<p> No Recorded Data for This User</p>";
-            }
+        get(userTasksRef).then((snapshot) => {
+          const taskTableBody = document.getElementById('task-table');
+          taskTableBody.innerHTML = ''; // Clear previous data
+          if (snapshot.exists()) {
+            // Handle task data
+            const tasks = snapshot.val();
+            console.log(tasks);
+            // Process tasks here
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${tasks.taskTitle}</td>
+              <td>${tasks.taskDescription}</td>
+              <td>${tasks.startDate}</td>
+              <td>${tasks.deadline}</td>
+              <td>${tasks.priority}</td>
+              <td>${tasks.status}</td>
+         `;
+         taskTableBody.appendChild(row);
+          
+         console.log(`${tasks.taskTitle}`);
+
+          } else {
+            console.log("No tasks found for the user.");
           }
-           // Process tasks here
-         } else {
-           console.log("No tasks found for the user.");
-         }
-       }).catch((error) => {
-         console.error('Error fetching tasks:', error);
-       });
+        }).catch((error) => {
+          console.error('Error fetching tasks:', error);
+        });
        } else {
          // User is signed out
          console.log("User is signed out");
@@ -350,41 +344,81 @@ for(selects of statusOption) {
       
   });
 
-  // function rendertables() {
-  //   const user = auth.currentUser;
-  //   console.log(user);
-  //   if (user) {
-  //     const tasksRef = ref(db,`users/${user.uid}/tasks`);
-  //     get(tasksRef).then((snapshot) => {
-  //       if(snapshot.exists()) {
-  //       const tasks = snapshot.val();
-  //       const tasksTableBody = document.getElementById('task-table');
-  //       tasksTableBody.innerHTML = ''; // Clear existing table rows
+  function addTaskToTheTable() {
+      // Get the table
+    var taskNo = 0;
+    var tbody = document.getElementById('table-data');
 
-  //       for (const key in tasks) {
-  //         if (Object.hasOwnProperty.call(tasks, key)) {
-  //           const task = tasks[key];
-  //           const row = tasksTableBody.insertRow();
+    let trow = document.createElement('tr');
+    let td1 = document.createElement('td');
+    let td2 = document.createElement('td');
+    let td3 = document.createElement('td');
+    let td4 = document.createElement('td');
+    let td5 = document.createElement('td');
+    let td6 = document.createElement('td');
+    let td7 = document.createElement('td');
 
-  //           // Populate table cells with task data
-  //           row.insertCell().textContent = task.taskTitle;
-  //           row.insertCell().textContent = task.taskDescription;
-  //           row.insertCell().textContent = task.startDate;
-  //           row.insertCell().textContent = task.deadline;
-  //           row.insertCell().textContent = task.priority;
-  //           row.insertCell().textContent = task.status;
-  //         }
-  //       }
-  //     }
-  //   })
-  //   .catch((error) => {
-  //       console.error("Error fetching tasks:", error);
-  //   });
-  //   } else {
-  //     console.log('No user is signed in.');
-  //   }
+    td1.innerHTML = (++taskNo);
+    td2.innerHTML = (td2);
+    td3.innerHTML = (td3);
+    td4.innerHTML = (td4);
+    td5.innerHTML = (td5);
+    td6.innerHTML = (td6);
+    td7.innerHTML = (td7);
+
+    trow.appendChild(td1);
+    trow.appendChild(td2);
+    trow.appendChild(td3);
+    trow.appendChild(td4);
+    trow.appendChild(td5);
+    trow.appendChild(td6);
+    trow.appendChild(td7);
+
+    tbody.appendChild(trow);
+  }
+
+  function addTasksToTheTable(task){
+    var taskNo = 0;
+    var tbody = document.getElementById('table-data');
+    tbody.innerHTML = "";
+    task.forEach(element => {
+      addTaskToTheTable(element.taskTitle, element.taskDescription, element.startDate, element.deadline, element.priority, element.status);
+    });
+
+  }
+
+  // function getTasks(){
+  //   let userId = auth.currentUser.uid;
+  //   const dbref = ref(db);
+  //   get(child(dbref, `users/${userId}/tasks`))
+  //     .then((snapshot) => {
+  //       const taskTableBody = document.getElementById('task-table');
+  //       taskTableBody.innerHTML = ''; // Clear previous data
+  //       var tasks = [];
+  //       snapshot.forEach(childSnapshot => {
+  //         const task = childSnapshot.val();
+  //         // tasks.push(childSnapshot.val());
+  //         const row = document.createElement('tr');
+  //         row.innerHTML = `
+  //           <td>${task.taskTitle}</td>
+  //           <td>${task.taskDescription}</td>
+  //           <td>${task.startDate}</td>
+  //           <td>${task.deadline}</td>
+  //           <td>${task.priority}</td>
+  //           <td>${task.status}</td>
+  //         `;
+  //         taskTableBody.appendChild(row);
+
+  //         console.log(`${task.taskTitle}`);
+
+
+  //       });
+  //       // addTasksToTheTable(tasks);
+  //       console.log('tasks: ', tasks);
+        
+        
+  //     })
   // }
-  // rendertables();
 
 
 
