@@ -187,36 +187,28 @@ for(selects of statusOption) {
 
         
         // Reference to the tasks of the current user
-       const userTasksRef = ref(db, `users/${userId}/tasks`);
+        //  const userTasksRef = ref(db, `users/${userId}/tasks`);
   
        // Fetch tasks
-        get(userTasksRef).then((snapshot) => {
-          const taskTableBody = document.getElementById('task-table');
+        get(databaseRef).then((snapshot) => {
+          const taskTableBody = document.getElementById('tasks-table-body');
           taskTableBody.innerHTML = ''; // Clear previous data
-          if (snapshot.exists()) {
-            // Handle task data
-            const tasks = snapshot.val();
-            console.log(tasks);
-            // Process tasks here
+          snapshot.forEach((childSnapshot) => {
+            const task = childSnapshot.val();
+            console.log(task.taskTitle);
+            // Process each task here
             const row = document.createElement('tr');
             row.innerHTML = `
-              <td>${tasks.taskTitle}</td>
-              <td>${tasks.taskDescription}</td>
-              <td>${tasks.startDate}</td>
-              <td>${tasks.deadline}</td>
-              <td>${tasks.priority}</td>
-              <td>${tasks.status}</td>
-         `;
-         taskTableBody.appendChild(row);
-          
-         console.log(`${tasks.taskTitle}`);
-
-          } else {
-            console.log("No tasks found for the user.");
-          }
-        }).catch((error) => {
-          console.error('Error fetching tasks:', error);
-        });
+              <td>${task.taskTitle}</td>
+              <td>${task.taskDescription}</td>
+              <td>${task.startDate}</td>
+              <td>${task.deadline}</td>
+              <td>${task.priority}</td>
+              <td>${task.status}</td>
+            `;
+            taskTableBody.appendChild(row);
+          });
+        })  
        } else {
          // User is signed out
          console.log("User is signed out");
