@@ -36,7 +36,7 @@ import {
     getAuth, onAuthStateChanged, signOut
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getDatabase, set, ref,
+import { getDatabase, push, ref,
     get, child
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 // import config from "./config";
@@ -224,10 +224,10 @@ for(selects of statusOption) {
 
         
         // Reference to the tasks of the current user
-        //  const userTasksRef = ref(db, `users/${userId}/tasks`);
+        const userTasksRef = ref(db, `users/${userId}/tasks`);
   
        // Fetch tasks
-        get(databaseRef).then((snapshot) => {
+        get(userTasksRef).then((snapshot) => {
           const taskTableBody = document.getElementById('tasks-table-body');
           taskTableBody.innerHTML = ''; // Clear previous data
           snapshot.forEach((childSnapshot) => {
@@ -256,7 +256,9 @@ for(selects of statusOption) {
       const userInfoContainer = document.getElementById('user');
       userInfoContainer.innerHTML = `${firstName} ${lastName}`;
     }
+    function displayTasksInfo(){
 
+    }
 
   // Get all elements with class "selection"
   const selectionElements = document.querySelectorAll('.selection');
@@ -354,14 +356,15 @@ for(selects of statusOption) {
 
       // Push data to Firebase database
       const user = auth.currentUser;
-      set(ref(db, 'users/' + user.uid + '/tasks'), {
-          taskTitle: taskTitle,
-          taskDescription: taskDescription,
-          startDate: startDate,
-          deadline: deadline,
-          priority: priority,
-          status: status
-      })
+      const userTasksRef = ref(db, 'users/' + user.uid + '/tasks');
+      push(userTasksRef, {
+        taskTitle: taskTitle,
+        taskDescription: taskDescription,
+        startDate: startDate,
+        deadline: deadline,
+        priority: priority,
+        status: status
+    })
       .then(function() {
         console.log("Data successfully written to the database.");
         addNewTask.reset();
@@ -406,48 +409,10 @@ for(selects of statusOption) {
     tbody.appendChild(trow);
   }
 
-  function addTasksToTheTable(task){
-    var taskNo = 0;
-    var tbody = document.getElementById('table-data');
-    tbody.innerHTML = "";
-    task.forEach(element => {
-      addTaskToTheTable(element.taskTitle, element.taskDescription, element.startDate, element.deadline, element.priority, element.status);
-    });
-
-  }
-
-  // function getTasks(){
-  //   let userId = auth.currentUser.uid;
-  //   const dbref = ref(db);
-  //   get(child(dbref, `users/${userId}/tasks`))
-  //     .then((snapshot) => {
-  //       const taskTableBody = document.getElementById('task-table');
-  //       taskTableBody.innerHTML = ''; // Clear previous data
-  //       var tasks = [];
-  //       snapshot.forEach(childSnapshot => {
-  //         const task = childSnapshot.val();
-  //         // tasks.push(childSnapshot.val());
-  //         const row = document.createElement('tr');
-  //         row.innerHTML = `
-  //           <td>${task.taskTitle}</td>
-  //           <td>${task.taskDescription}</td>
-  //           <td>${task.startDate}</td>
-  //           <td>${task.deadline}</td>
-  //           <td>${task.priority}</td>
-  //           <td>${task.status}</td>
-  //         `;
-  //         taskTableBody.appendChild(row);
-
-  //         console.log(`${task.taskTitle}`);
 
 
-  //       });
-  //       // addTasksToTheTable(tasks);
-  //       console.log('tasks: ', tasks);
-        
-        
-  //     })
-  // }
+
+  
 
 
 
