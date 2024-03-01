@@ -1,3 +1,37 @@
+document.addEventListener('DOMContentLoaded', function() {
+  const swiper = new Swiper('.swiper', {
+      // Optional parameters
+      loop: true,
+      slidesPerView: 'auto',
+      autoplay: {
+          delay: 4000, // Auto slide after 5 seconds
+      },
+       // Slide transition effect
+       effect: 'fade', // Change the effect to your desired animation type
+        
+       // Fade effect specific options
+       fadeEffect: {
+           crossFade: true // Enable cross-fade animation
+       },
+      // If we need pagination
+      pagination: {
+          el: '.swiper-pagination',
+          clickable: true,
+      },
+      
+      // If we need navigation buttons
+      navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+      },
+      
+      // If we need scrollbar
+      scrollbar: {
+          el: '.swiper-scrollbar',
+      },
+  });
+});
+
 import { 
     getAuth, onAuthStateChanged, signOut
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -5,11 +39,14 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebas
 import { getDatabase, set, ref,
     get, child
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
+// import config from "./config";
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+ // script.js
+ import config from './config.js';
+
 const firebaseConfig = {
-    apiKey: "AIzaSyCNtW0n-Hefvxlhq1VeqhDvmhWQQIChSls",
-    authDomain: "taskmanager-346df.firebaseapp.com",
+    apiKey: config.apiKey,
+    authDomain: config.apiSecret,
     projectId: "taskmanager-346df",
     storageBucket: "taskmanager-346df.appspot.com",
     messagingSenderId: "593036447381",
