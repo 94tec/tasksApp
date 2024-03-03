@@ -71,7 +71,7 @@
                 <div class="top-widget">
                     <div class="tasks-status-container">
                         <div class="salutation">
-                            <h4>Hello, <span id = "user"></span></h4>
+                            <h4>Hello, <span id = "userFirstName"></span><span id = "userLastName"></span></h4>
                         </div>
                         <div class="statusList">
                             <div class=" tasks total-tasks">
@@ -97,138 +97,9 @@
                     <div class="card-container">
                         <div class="card-content swiper">
                             <!-- Swiper Wrapper -->
-                            <div class="swiper-wrapper">
+                            <div class="swiper-wrapper" id="slide">
                                 <!-- Slides -->
-                                <div class="cards swiper-slide">
-                                    <!-- Slide 1 content -->
-                                    <div class="deadline-count-down">
-                                        <div id="time">
-                                            <div class="circle" style="--clr: #7f11c4;">
-                                                <svg>
-                                                    <circle cx = "45" cy = "45" r = "45" id = "dd"></circle>
-                                                </svg>
-                                                <div id="days">00 <br> <span>Days</span></div>
-                                            </div>
-                                            <div class="circle" style="--clr: #61d81c;">
-                                                <svg>
-                                                    <circle  cx = "45" cy = "45" r = "45" id = "hh"></circle>
-                                                </svg>
-                                                <div id="hours">00 <br> <span>Hours</span></div>
-                                            </div>
-                                            <div class="circle" style="--clr: #0ef;">
-                                                <svg>
-                                                    <circle  cx = "45" cy = "45" r = "45" id = "mm"></circle>
-                                                </svg>
-                                                <div id="minutes">00 <br> <span>Minutes</span></div>
-                                            </div>
-                                            <div class="circle" style="--clr: #2987a3;">
-                                                <svg>
-                                                    <circle  cx = "45" cy = "45" r = "45" id = "ss"></circle>
-                                                </svg>
-                                                <div id="seconds">00 <br> <span>Seconds</span></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card-title">
-                                        <h4 class="id">Task ID</h4>
-                                        <h4 class="task-title">Wireframes</h4>
-                                    </div>
-                                    <div class="card-description">
-                                        <p>All the frames are designed and connected</p>
-                                    </div>
-                                    <div class="card-action">
-                                        <p>Start time: 12/3/2024 <span>12:34:33</span></p>
-                                        <p>Due time: 14/3/2024 <span>12:34:33</span></p>
-                                        <input type="button" value="view" class="input">
-                                    </div>
-                                </div>
-                                <div class="cards swiper-slide">
-                                    <!-- Slide 2 content -->
-                                    <div class="deadline-count-down">
-                                        <div id="time">
-                                            <div class="circle" style="--clr: #7f11c4;">
-                                                <svg>
-                                                    <circle cx = "45" cy = "45" r = "45" id = "dd"></circle>
-                                                </svg>
-                                                <div id="days">00 <br> <span>Days</span></div>
-                                            </div>
-                                            <div class="circle" style="--clr: #61d81c;">
-                                                <svg>
-                                                    <circle  cx = "45" cy = "45" r = "45" id = "hh"></circle>
-                                                </svg>
-                                                <div id="hours">00 <br> <span>Hours</span></div>
-                                            </div>
-                                            <div class="circle" style="--clr: #0ef;">
-                                                <svg>
-                                                    <circle  cx = "45" cy = "45" r = "45" id = "mm"></circle>
-                                                </svg>
-                                                <div id="minutes">00 <br> <span>Minutes</span></div>
-                                            </div>
-                                            <div class="circle" style="--clr: #2987a3;">
-                                                <svg>
-                                                    <circle  cx = "45" cy = "45" r = "45" id = "ss"></circle>
-                                                </svg>
-                                                <div id="seconds">00 <br> <span>Seconds</span></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card-title">
-                                        <h4 class="id">Task ID</h4>
-                                        <h4 class="task-title">Wireframes</h4>
-                                    </div>
-                                    <div class="card-description">
-                                        <p>All the frames are designed and connected</p>
-                                    </div>
-                                    <div class="card-action">
-                                        <p>Start time: 12/3/2024 <span>12:34:33</span></p>
-                                        <p>Due time: 14/3/2024 <span>12:34:33</span></p>
-                                        <input type="button" value="view" class="input">
-                                    </div>
-                                </div>
-                                <div class=" cards swiper-slide">
-                                    <!-- Slide 3 content -->
-                                    <div class="deadline-count-down">
-                                        <div id="time">
-                                            <div class="circle" style="--clr: #7f11c4;">
-                                                <svg>
-                                                    <circle cx = "45" cy = "45" r = "45" id = "dd"></circle>
-                                                </svg>
-                                                <div id="days">00 <br> <span>Days</span></div>
-                                            </div>
-                                            <div class="circle" style="--clr: #61d81c;">
-                                                <svg>
-                                                    <circle  cx = "45" cy = "45" r = "45" id = "hh"></circle>
-                                                </svg>
-                                                <div id="hours">00 <br> <span>Hours</span></div>
-                                            </div>
-                                            <div class="circle" style="--clr: #0ef;">
-                                                <svg>
-                                                    <circle  cx = "45" cy = "45" r = "45" id = "mm"></circle>
-                                                </svg>
-                                                <div id="minutes">00 <br> <span>Minutes</span></div>
-                                            </div>
-                                            <div class="circle" style="--clr: #2987a3;">
-                                                <svg>
-                                                    <circle  cx = "45" cy = "45" r = "45" id = "ss"></circle>
-                                                </svg>
-                                                <div id="seconds">00 <br> <span>Seconds</span></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card-title">
-                                        <h4 class="id">Task ID</h4>
-                                        <h4 class="task-title">Wireframes</h4>
-                                    </div>
-                                    <div class="card-description">
-                                        <p>All the frames are designed and connected</p>
-                                    </div>
-                                    <div class="card-action">
-                                        <p>Start time: 12/3/2024 <span>12:34:33</span></p>
-                                        <p>Due time: 14/3/2024 <span>12:34:33</span></p>
-                                        <input type="button" value="view" class="input">
-                                    </div>
-                                </div>
-                                <!-- Add more slides as needed -->
+
                             </div>
                             <!-- If we need pagination -->
                             <div class="swiper-pagination"></div>
@@ -251,7 +122,7 @@
                                 </div> 
                                 <div class="timeline-column">
                                     <div class="timeline-box">
-                                        <div class="timeline-content">
+                                        <div class="timeline-content" id="task-container">
                                             <div class="content"> 
                                                 <div class="year"><ion-icon name="calendar-outline"></ion-icon> 2024 - 2024 <h4>04:00 AM</h4></div>
                                                 <h3>Wake Up</h3>
@@ -270,9 +141,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <a href="#home">
-                                    <button type="button" id="show-add-form"><ion-icon name="add-outline"></ion-icon></button>
-                                </a>
                             </div>
                         </span>
                     </div>
@@ -382,7 +250,7 @@
                                 </li>
                                 <li class="option" id="statusOption" style="--i:1">
                                     <ion-icon name="trending-down-outline" class="icon"></ion-icon>
-                                    <span class="option-text">On Prgress</span>
+                                    <span class="option-text">On Progress</span>
                                 </li>
                             </ul>
                         </div>

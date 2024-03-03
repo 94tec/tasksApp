@@ -245,6 +245,18 @@ header{
     display: flex;
     align-items: center;
 }
+.dashboard .top-widget .tasks-status-container .salutation h4{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1em;
+    font-weight: 600;
+    column-gap: 4px;
+}
+.dashboard .top-widget .tasks-status-container .salutation h4 span{
+    color: #21b94f;
+}
 .dashboard .top-widget .tasks-status-container .statusList{
     display: flex;
     background: var(--btn-color);
@@ -470,49 +482,23 @@ header{
     background-size:cover; */
     z-index: 1; 
 } 
-/* .dashboard .aside-widget .box span i{
-    position: absolute;
-    top: 8px;
-    left: -15px;
-    width: 350px;
-    height: 50px;
-    background: hsl(192, 100%, 50%);
-    border-radius: 8px;
-    border-bottom-left-radius: 0;
-    z-index: -1;
-
-}
-.dashboard .aside-widget .box span i::before{
-    content: '';
-    position: absolute;
-    top: 50px;
-    width: 20px;
-    height: 30px;
-    background: hsl(195, 33%, 61%);
-    border-top-left-radius: 20px;
-    border-bottom-left-radius: 20px;
-    z-index: 2;
-}
-.dashboard .aside-widget .box span i::after{
-    content: '';
-    position: absolute;
-    top: 50px;
-    width: 20px;
-    height: 15px;
-    background: hsl(192, 100%, 50%);
-    z-index: 1;
-} */
 .dashboard .aside-widget .box span .timeline{
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100%;
-    padding: 0 15px;
+    padding: 0 5px;
 }
 .dashboard .aside-widget .box span .timeline .timeline-column{
-    position: relative;
+    position: absolute;
     display: flex;
+    top: 55px;
     width: 100%;
+    max-height: 540px;
+    overflow-x: auto;
+    scrollbar-width: thin; /* "auto" or "thin" depending on browser support */
+    scrollbar-color: #9741cc #242323; /* thumb color and track color */
+    padding-left: 8px;
 }
 .dashboard .aside-widget .box span .timeline .calender{
     position: absolute;
@@ -541,12 +527,18 @@ header{
     font-size: 20px;
 }
 .dashboard .aside-widget .box span .timeline .timeline-column .timeline-box{
-    border-left: 2px solid #9741cc;
-}
+    padding:0 8px ;
+    width: 100%;
+} 
 .dashboard .aside-widget .box span .timeline .timeline-column .timeline-box .timeline-content{
     padding-left: 20px;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-left: 2px solid #9741cc; 
 }
-.dashboard .aside-widget .box span .timeline .timeline-column .timeline-box .timeline-content .content{
+.dashboard .aside-widget .box span .timeline .timeline-column .timeline-box .timeline-content .content
+{
     position: relative;
     padding: 10px;
     border: 2px solid #9741cc;
@@ -554,12 +546,31 @@ header{
     margin-bottom: 8px;
     transition: all 0.5s ease-out;
     cursor: pointer;
+
 }
-.dashboard .aside-widget .box span .timeline .timeline-column .timeline-box .timeline-content .content:hover{
+.task
+{
+    position: relative;
+    padding: 10px;
+    border: 2px solid #9741cc;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 8px;
+    transition: all 0.5s ease-out;
+    cursor: pointer;  
+    width: 100%;  
+}  
+.dashboard .aside-widget .box span .timeline .timeline-column .timeline-box .timeline-content .content:hover,
+.task:hover
+{
     background: #313030;
     border: 2px solid #313030;
 }
-.dashboard .aside-widget .box span .timeline .timeline-column .timeline-box .timeline-content .content::before{
+.dashboard .aside-widget .box span .timeline .timeline-column .timeline-box .timeline-content .content::before,
+.task::before
+{
     content: '';
     position: absolute;
     top: 0;
@@ -587,30 +598,27 @@ header{
     font-size: 16px;
     font-weight: 500;
 }
-.dashboard .aside-widget .box span .timeline a{
+.task-title {
+    color: #9741cc;
+}
+
+.task-description {    
+    font-size: 16px;
+    margin-bottom: 16px;
+    text-align: center;
+}
+.status{
     position: absolute;
-    bottom: 0;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 4px;
-    border-radius: 8px;
-    margin-bottom: 8px;
-}
-.dashboard .aside-widget .box span .timeline a #show-add-form{
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: var(--btn-color);
-}
-.dashboard .aside-widget .box span .timeline a #show-add-form ion-icon{
-    font-size: 30px;
-    color: #fff;
+    right: 3px;
+    bottom: 3px;
+    color: #37e078;
 }
 
-
+.endDate{
+    position: absolute;
+    bottom: 3px;
+    left: 3px;
+}
 @keyframes rotate {
     0%{
         transform: rotate(0deg);
@@ -753,25 +761,6 @@ header{
 .task-pane .main-widget-list .table-header thead tr th:last-child{
     border-top-right-radius: 8px;
 }
-/* .task-pane .main-widget-list .display table{
-    width: 100%;
-    height: 435px;
-    overflow: scroll;
-}
-.task-pane .main-widget-list .display #task-table{
-    background: rgb(139, 151, 151);
-    color: red;
-}
-.task-pane .main-widget-list .display #task-table tr{
-    background-color: #d5e6da;
-}
-.task-pane .main-widget-list .display #task-table td{
-    padding: 4px 15px;
-    vertical-align: middle;
-    font-weight: 500;
-    color: #000;
-} */
-
 /* scroll bar */
 ::-webkit-scrollbar{
     width: 6px;
