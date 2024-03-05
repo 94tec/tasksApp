@@ -746,132 +746,119 @@ header{
     color: #fff;
 } 
 .task-pane .main-widget-list{
-    position: absolute;
-    top: 0px;
-    left: 0;
-    width: 100%;
+    position: relative;
     grid-area: main-widget;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    border: 2px solid #000;
-    border-radius: 8px;
 }
-.task-pane .main-widget-list table{
+/* Set the table layout to fixed */
+#task-table-header,
+#task-table {
     width: 100%;
     table-layout: fixed;
 }
-.task-pane .main-widget-list .table-header,
-.task-pane .main-widget-list .display
-{
-    width: 100%;
+
+/* Common styles for table headers and table cells */
+.task-pane .main-widget-list .table-header th,
+#tasks-table-body tr td {
+    padding: 10px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
-.task-pane .main-widget-list .table-header thead{
-    position: relative;
-    background: rgb(210, 226, 226);
-    padding: 10px 15px;
-    text-transform: uppercase;
+.task-pane .main-widget-list .table-header th{
+    border-bottom: 3px solid #fff;
+    background: #8da193;
 }
-.task-pane .main-widget-list .table-header thead tr th{
-    color: var(--btn-color);
-    padding: 10px 0;
-    border-bottom: 3px solid rgb(255, 255, 255);
+.task-pane .main-widget-list .table-header th:nth-child(1),
+#tasks-table-body tr td:nth-child(1) {
+    width: 3.5%;
 }
-.task-pane .main-widget-list .table-header thead tr th:nth-child(1){
-    border-top-left-radius: 8px;
-    width: 2%;
-}
-.task-pane .main-widget-list .table-header thead tr th:nth-child(2){
+
+.task-pane .main-widget-list .table-header th:nth-child(2),
+#tasks-table-body tr td:nth-child(2) {
     width: 16%;
 }
-.task-pane .main-widget-list .table-header thead tr th:nth-child(3){
-    width: 20%;
+
+.task-pane .main-widget-list .table-header th:nth-child(3),
+#tasks-table-body tr td:nth-child(3) {
+    width: 18%;
 }
-.task-pane .main-widget-list .table-header thead tr th:nth-child(4){
+
+.task-pane .main-widget-list .table-header th:nth-child(4),
+#tasks-table-body tr td:nth-child(4) {
     width: 23%;
 }
-.task-pane .main-widget-list .table-header thead tr th:nth-child(5){
-    width: 5%;
+
+.task-pane .main-widget-list .table-header th:nth-child(5),
+#tasks-table-body tr td:nth-child(5) {
+    width: 7%;
 }
-.task-pane .main-widget-list .table-header thead tr th:nth-child(6){
+
+.task-pane .main-widget-list .table-header th:nth-child(6),
+#tasks-table-body tr td:nth-child(6) {
     width: 10%;
 }
-.task-pane .main-widget-list .table-header thead tr th:nth-child(7){
+
+.task-pane .main-widget-list .table-header th:nth-child(7),
+#tasks-table-body tr td:nth-child(7) {
     width: 10%;
 }
-.task-pane .main-widget-list .table-header thead tr th:nth-child(8){
+
+.task-pane .main-widget-list .table-header th:nth-child(8),
+#tasks-table-body tr td:nth-child(8) {
     width: 10%;
 }
-.task-pane .main-widget-list .table-header thead tr th:last-child{
-    border-top-right-radius: 8px;
-    width: 5%;
+
+.task-pane .main-widget-list .table-header th:last-child,
+#tasks-table-body tr td:last-child {
+    width: 6%;
 }
-#tasks-table-body tr{
-    position: relative;
+
+/* Display table rows as flex for responsive layout */
+#tasks-table-body tr {
+    display: flex;
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    column-gap: 5px;
-    margin-bottom: 3px; /* Optional: add some space between rows */
-    border: 1px solid #ddd; /* Optional: add border to each row */
-} 
-#tasks-table-body tr td{
-    padding: 10px 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-} 
+    border-bottom: 2px solid #fff;
+}
+
+/* Set flex basis for each column */
+#tasks-table-body tr td {
+    flex: 1;
+}
+
+/* Set specific flex basis for each column */
 #tasks-table-body tr td:nth-child(1) {
-    position: absolute;
-    left: 0;
-    width: 2% !important;
+    flex-basis: calc(2% / 9 * 100);
+}
+
+#tasks-table-body tr td:nth-child(2) {
+    flex-basis: calc(16% / 9 * 100);
+}
+
+#tasks-table-body tr td:nth-child(3) {
+    flex-basis: calc(20% / 9 * 100);
+}
+
+#tasks-table-body tr td:nth-child(4) {
+    flex-basis: calc(23% / 9 * 100);
+}
+
+#tasks-table-body tr td:nth-child(5) {
+    flex-basis: calc(5% / 9 * 100);
+}
+
+#tasks-table-body tr td:nth-child(6),
+#tasks-table-body tr td:nth-child(7),
+#tasks-table-body tr td:nth-child(8) {
+    flex-basis: calc(10% / 9 * 100);
+}
+
+#tasks-table-body tr td:last-child {
+    flex-basis: calc(5% / 9 * 100);
 }
 
 
-#tasks-table-body tr td:nth-child(2){
-    position: absolute;
-    left: 30px;
-    width: 16% !important;
-}
 
-#tasks-table-body tr td:nth-child(3){
-    position: absolute;
-    width: 20% !important;
-    left: 260px;
-}
-#tasks-table-body tr td:nth-child(4){
-    width: 23% !important;
-}   
-#tasks-table-body tr td:nth-child(5){
-    width: 5% !important;
-}
-#tasks-table-body tr td:nth-child(6){
-    position: absolute;
-    right: 350px;
-    width: 10% !important;
-}
-
-#tasks-table-body tr td:nth-child(7){
-    position: absolute;
-    right: 210px;
-    width: 10% !important;
-}
-
-#tasks-table-body tr td:nth-child(8){
-    position: absolute;
-    right: 60px;
-    width: 10% !important;
-}
-
-#tasks-table-body tr td:nth-child(9){
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 5% !important;
-    column-gap: 5px !important;
-} 
 /* scroll bar */
 ::-webkit-scrollbar{
     width: 6px;
