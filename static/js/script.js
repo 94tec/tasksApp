@@ -103,11 +103,12 @@ const firebaseConfig = {
   const dbRef = ref(db);
 
 
-  function login() {
+  function login(email, password) {
     // Your login logic here
     // Assume login is successful
     showToast("Login successful! Welcome");
   }
+  login();
 
   function logout() {
     signOut(auth).then(() => {
@@ -125,7 +126,6 @@ const firebaseConfig = {
     if (user) {
         // User is authenticated
         isLoggedIn.style.display = 'block';
-        login();
     } else {
         // User is not authenticated
         isLoggedIn.style.display = 'none';
@@ -169,6 +169,10 @@ const firebaseConfig = {
 
        // Retrieve data based on the query
        get(ongoingTasksQuery).then((snapshot) => {
+          const totalTasks = snapshot.size;
+          const userOngoingTasks = document.getElementById('ongoingTasks');
+          userOngoingTasks.textContent = totalTasks.toString();
+          console.log("ongoing tasks", totalTasks)
            if (snapshot.exists()) {
             // Container element to hold the tasks
             const taskContainer = document.getElementById('task-container');
@@ -177,6 +181,7 @@ const firebaseConfig = {
                // Iterate through the snapshot and log or process each task
                snapshot.forEach((taskSnapshot) => {
                    const task = taskSnapshot.val();
+                   const deadline = new Date(task.deadline);
                    console.log(task);
                    // Process the task data as needed
                    const taskElement = document.createElement('div');
@@ -184,7 +189,7 @@ const firebaseConfig = {
                    taskElement.innerHTML = `
                       <h3 class="task-title">${task.taskTitle}</h3>
                       <p class="task-description">${task.taskDescription}</p>
-                      <p class = "endDate"><strong>Deadline:</strong> ${task.deadline}</p>
+                      <p class = "endDate"><strong>Deadline:</strong> ${deadline.toLocaleString().substring(0, deadline.toLocaleString().length - 6)}</p>
                       <p class = "status">${task.status}</p>
                     `;
                    taskContainer.appendChild(taskElement);
@@ -195,7 +200,6 @@ const firebaseConfig = {
        }).catch((error) => {
            console.error("Error retrieving ongoing tasks: ", error);
       });
-      // Fetch all tasks and display in the browser table
       // Fetch tasks to display in the slide widget
       get(userTasksRef)
       .then((snapshot) => {
@@ -214,9 +218,12 @@ const firebaseConfig = {
           slidesHTML += `
             <div class="swiper-slide">
               <div class="cards">
-                <p>Start Date: ${startDate.toLocaleString()}</p>
-                <p>Deadline: ${deadline.toLocaleString()}</p>
+                <div class = "taskDates">
+                  <p>Start Date: ${startDate.toLocaleString().substring(0, startDate.toLocaleString().length - 6)}</p>
+                  <p>Deadline: ${deadline.toLocaleString().substring(0, deadline.toLocaleString().length - 6)}</p>
+                </div>
                 <!-- Display time lapse -->
+                <p class = "count-down-header"> Task Time Lapse</p>
                 <div class="deadline-count-down">
                   <!-- Your countdown timer HTML here -->
                   <div id="time">
@@ -247,24 +254,31 @@ const firebaseConfig = {
                   </div>                   
                 </div>
                 <div class="card-title">
-                  <h4 class="id">Task ID</h4>
+                  <h4 class="id">${childSnapshot.key}</h4>
                   <h4 class="task-title">${task.taskTitle}</h4>
                 </div>
                 <div class="card-description">
                   <p>${task.taskDescription}</p>
                 </div>
                 <div class="card-action">
-                  <p>${task.startDate}</p>
-                  <p>${task.deadline}</p>
+                  <p>${task.status}</p>
                   <input type="button" value="view" class="input">
                 </div>
               </div>
-            </div>`;
+            </div>`;   
+            document.addEventListener('DOMContentLoaded', () => {
+             // Animate the dashoffset for each circle element
+            animateDashOffset('dd', startDate, deadline);
+            animateDashOffset('hh', startDate, deadline);
+            animateDashOffset('mm', startDate, deadline);
+            animateDashOffset('ss', startDate, deadline);
+            });
         });
-
+      
         // Set the HTML of the slide container
         slideContainer.innerHTML = slidesHTML;
 
+        
         // Initialize Swiper after adding slides
         const swiper = new Swiper('.swiper', {
           // Optional parameters
@@ -272,7 +286,7 @@ const firebaseConfig = {
           loop: true,
           slidesPerView: 'auto',
           autoplay: {
-          delay: 4000, // Auto slide after 4 seconds
+          delay: 6000, // Auto slide after 4 seconds
           },
           // Slide transition effect
           effect: 'fade', // Change the effect to your desired animation type
@@ -298,10 +312,39 @@ const firebaseConfig = {
           el: '.swiper-scrollbar',
           },
         })
-      })
-      .catch((error) => {
-        console.error("Error fetching tasks: ", error);
-      });
+        })
+        .catch((error) => {
+          console.error("Error fetching tasks: ", error);
+        });
+      function animateDashOffset(circleId, startDate, deadline) {
+        const circle = document.getElementById(circleId);
+        if (!circle) {
+            console.error(`Circle element with ID '${circleId}' not found.`);
+            return;
+        }
+        const length = circle.getTotalLength();
+        const elapsedTime = (new Date()).getTime() - startDate.getTime(); // Current time - start time
+        const progress = elapsedTime / (deadline.getTime() - startDate.getTime());
+        const dashoffset = length * (1 - progress);
+        circle.style.strokeDashoffset = dashoffset;
+        const color = getColor(progress); // Get color based on progress
+        const dasharray = length + ' ' + length;
+        circle.style.strokeDasharray = dasharray;
+        circle.style.strokeDashoffset = dashoffset;
+        
+      };
+      function getColor(progress) {
+        // Define colors for different progress values
+        const colors = [
+            '#7f11c4',
+            '#61d81c', 
+            '#0ef', 
+            '#2987a3',
+        ];
+        // Calculate color index based on progress
+        const colorIndex = Math.floor(progress * (colors.length - 1));
+        return colors[colorIndex];
+    }
       // Function to calculate time lapse between two dates
       function getTimeLapse(startDate, endDate) {
         // Calculate the difference in milliseconds
@@ -313,37 +356,66 @@ const firebaseConfig = {
         const millisecondsPerHour = millisecondsPerMinute * 60;
         const millisecondsPerDay = millisecondsPerHour * 24;
 
+        
         // Calculate the elapsed time
         const days = Math.floor(difference / millisecondsPerDay);
         const hours = Math.floor((difference % millisecondsPerDay) / millisecondsPerHour);
         const minutes = Math.floor((difference % millisecondsPerHour) / millisecondsPerMinute);
         const seconds = Math.floor((difference % millisecondsPerMinute) / millisecondsPerSecond);
-
+       
         return {
           days: days,
           hours: hours,
           minutes: minutes,
           seconds: seconds
         };
+
       }
        // Fetch all tasks and display in the browser table
         get(userTasksRef).then((snapshot) => {
+          const totalTasks = snapshot.size;
+          const usertotalTasks = document.getElementById('totalTasks');
+          usertotalTasks.textContent = totalTasks.toString();
+          console.log("Total tasks", totalTasks)
           const taskTableBody = document.getElementById('tasks-table-body');
           taskTableBody.innerHTML = ''; // Clear previous data
-          snapshot.forEach((childSnapshot) => {
-            const task = childSnapshot.val();
-            // Process each task here
-            const row = document.createElement('tr');
-            row.innerHTML = `
-              <td>${task.taskTitle}</td>
-              <td>${task.taskDescription}</td>
-              <td>${task.startDate}</td>
-              <td>${task.deadline}</td>
-              <td>${task.priority}</td>
-              <td>${task.status}</td>
-            `;
-            taskTableBody.appendChild(row);
-          });
+          let index = 1;
+          if(snapshot.exists()){
+            snapshot.forEach((childSnapshot) => {
+              const task = childSnapshot.val();
+              // Calculate time lapse
+              const startDate = new Date(task.startDate);
+              const deadline = new Date(task.deadline);
+              // Process each task here
+              const row = document.createElement('tr');
+              row.innerHTML = `
+                <td>${index}</td>
+                <td>${childSnapshot.key}</td>
+                <td>${task.taskTitle}</td>
+                <td>${task.taskDescription}</td>
+                <td>${task.priority}</td>
+                <td>${startDate.toLocaleString().substring(0, startDate.toLocaleString().length - 6)}</td>
+                <td>${deadline.toLocaleString().substring(0, deadline.toLocaleString().length - 6)}</td>
+                <td>${task.status}</td>
+                <td><ion-icon name="trash-outline"></ion-icon><ion-icon name="ellipsis-vertical-outline"></ion-icon></td>
+              `;
+              row.querySelectorAll('td').forEach(td => {
+                td.style.width = '100%';
+              });
+              taskTableBody.appendChild(row);
+              index++;
+            });
+          }else{
+             // If there are no tasks
+              const row = document.createElement('tr');
+              row.innerHTML = '<td colspan="8">No tasks available</td>'; // Colspan to span across all columns
+              row.querySelectorAll('td').forEach(td => {
+                td.style.width = '100%';
+                td.style.textAlign = 'center'; 
+              });
+              taskTableBody.appendChild(row);
+          }
+          
         }).catch((error) => {
            console.error("Error fetching tasks: ", error);
           });  
