@@ -78,7 +78,7 @@ import {
     getAuth, onAuthStateChanged, signOut
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getDatabase, push, ref,
+import { getDatabase, push, ref,remove,
     get, child, query, orderByChild, equalTo
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 // import config from "./config";
@@ -396,8 +396,12 @@ const firebaseConfig = {
                 <td>${startDate.toLocaleString().substring(0, startDate.toLocaleString().length - 6)}</td>
                 <td>${deadline.toLocaleString().substring(0, deadline.toLocaleString().length - 6)}</td>
                 <td>${task.status}</td>
-                <td><ion-icon name="trash-outline"></ion-icon><ion-icon name="ellipsis-vertical-outline"></ion-icon></td>
+                <td>
+                  <ion-icon name="trash-outline" id = "deleteTaskBtn"></ion-icon>
+                  <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+                </td>
               `;
+              row.setAttribute('data-task-key', childSnapshot.key);
               row.querySelectorAll('td').forEach(td => {
                 td.style.width = '100%';
               });
@@ -417,7 +421,7 @@ const firebaseConfig = {
           
         }).catch((error) => {
            console.error("Error fetching tasks: ", error);
-          });  
+          });       
        } else {
          // User is signed out
          console.log("User is signed out");
@@ -551,3 +555,45 @@ addNewTask.addEventListener('submit', (event) => {
     console.error("Error writing data to the database: ", error);
   });
 });
+document.addEventListener('DOMContentLoaded', function() {
+  // Listen for changes in authentication state
+  onAuthStateChanged(auth, function(user) {
+    if (user) {
+      const userId = user.uid;
+      const tasksRef = ref(db, `users/${userId}/tasks`);
+      // Add event listener to the table body and listen for clicks on the delete icon
+      const taskTableBody = document.getElementById('tasks-table-body');
+      taskTableBody.addEventListener('click', function(event) {
+          // Check if the clicked element is the delete icon
+          if (event.target && event.target.id === 'deleteTaskBtn') {
+              console.log('Delete button clicked');
+              // Get the task key from the parent row
+              const row = event.target.closest('tr');
+              const taskKey = row.getAttribute('data-task-key');
+              // Use the task key to create a reference to the specific task in the database
+              const taskRef = child(tasksRef, taskKey);
+              remove(taskRef)
+                .then(() => {
+                    console.log('Task deleted successfully');
+                    // Optionally, remove the row from the table
+                    row.remove();
+                })
+                .catch(error => {
+                    console.error('Error deleting task:', error);
+                });
+          }
+      });
+    } else {
+      console.log('No user is currently signed in.');
+    }
+  });
+});
+
+
+
+
+
+
+
+
+

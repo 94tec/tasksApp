@@ -771,7 +771,7 @@ header{
 }
 .task-pane .main-widget-list .table-header th:nth-child(1),
 #tasks-table-body tr td:nth-child(1) {
-    width: 3.5%;
+    width: 3%;
 }
 
 .task-pane .main-widget-list .table-header th:nth-child(2),
@@ -786,7 +786,7 @@ header{
 
 .task-pane .main-widget-list .table-header th:nth-child(4),
 #tasks-table-body tr td:nth-child(4) {
-    width: 23%;
+    width: 22%;
 }
 
 .task-pane .main-widget-list .table-header th:nth-child(5),
@@ -796,7 +796,7 @@ header{
 
 .task-pane .main-widget-list .table-header th:nth-child(6),
 #tasks-table-body tr td:nth-child(6) {
-    width: 10%;
+    width: 9%;
 }
 
 .task-pane .main-widget-list .table-header th:nth-child(7),
@@ -828,7 +828,7 @@ header{
 
 /* Set specific flex basis for each column */
 #tasks-table-body tr td:nth-child(1) {
-    flex-basis: calc(2% / 9 * 100);
+    flex-basis: calc(3% / 9 * 100);
 }
 
 #tasks-table-body tr td:nth-child(2) {
@@ -836,15 +836,15 @@ header{
 }
 
 #tasks-table-body tr td:nth-child(3) {
-    flex-basis: calc(20% / 9 * 100);
+    flex-basis: calc(18% / 9 * 100);
 }
 
 #tasks-table-body tr td:nth-child(4) {
-    flex-basis: calc(23% / 9 * 100);
+    flex-basis: calc(22% / 9 * 100);
 }
 
 #tasks-table-body tr td:nth-child(5) {
-    flex-basis: calc(5% / 9 * 100);
+    flex-basis: calc(7% / 9 * 100);
 }
 
 #tasks-table-body tr td:nth-child(6),
@@ -855,9 +855,22 @@ header{
 
 #tasks-table-body tr td:last-child {
     flex-basis: calc(5% / 9 * 100);
+    display: flex;
+    justify-content: center;
+    column-gap: 10px;
 }
-
-
+#tasks-table-body tr td:last-child ion-icon:nth-child(1) {
+    color: #d85360;
+    font-size: 1.2rem;
+}
+#tasks-table-body tr td:last-child ion-icon:nth-child(1):hover,
+#tasks-table-body tr td:last-child ion-icon:nth-child(1):focus,
+#tasks-table-body tr td:last-child ion-icon:nth-child(1):visited {
+    /* Add styles for hover, focus, and visited states */
+    /* For example, you can change the color or add a transition */
+    color: #ff0000; /* Red color */
+    transform: scale(1.3); /* Example: scale icon on hover/focus */
+}
 
 /* scroll bar */
 ::-webkit-scrollbar{
