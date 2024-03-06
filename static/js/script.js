@@ -194,7 +194,14 @@ const firebaseConfig = {
                    taskContainer.appendChild(taskElement);
                });
            } else {
-               console.log("No On Progress tasks found.");
+               console.log("No On Progress tasks found...");
+               const taskContainer = document.getElementById('task-container');
+               // Clear previous results
+               taskContainer.innerHTML = ''
+               const nilOngoingTask = document.createElement('div');
+               nilOngoingTask.classList.add('on-progress-nil');
+               nilOngoingTask.innerHTML = 'No On Progress Tasks Found add some to display';
+               taskContainer.appendChild(nilOngoingTask);
            }
        }).catch((error) => {
            console.error("Error retrieving ongoing tasks: ", error);
@@ -206,7 +213,8 @@ const firebaseConfig = {
         let slidesHTML = ''; // Initialize a string to store HTML of all slides
 
         // Loop through the snapshot to generate slide HTML
-        snapshot.forEach((childSnapshot) => {
+        if(snapshot.exists()){
+          snapshot.forEach((childSnapshot) => {
           const task = childSnapshot.val();
           // Calculate time lapse
           const startDate = new Date(task.startDate);
@@ -263,16 +271,16 @@ const firebaseConfig = {
                   <p>${task.status}</p>
                   <input type="button" value="view" class="input">
                 </div>
-              </div>
-            </div>`;   
-            document.addEventListener('DOMContentLoaded', () => {
-             // Animate the dashoffset for each circle element
+                </div>
+              </div>`;   
+          });
+          document.addEventListener('DOMContentLoaded', () => {
+            // Animate the dashoffset for each circle element
             animateDashOffset('dd', startDate, deadline);
             animateDashOffset('hh', startDate, deadline);
             animateDashOffset('mm', startDate, deadline);
             animateDashOffset('ss', startDate, deadline);
             });
-        });
       
         // Set the HTML of the slide container
         slideContainer.innerHTML = slidesHTML;
@@ -311,8 +319,15 @@ const firebaseConfig = {
           el: '.swiper-scrollbar',
           },
         })
-        })
-        .catch((error) => {
+      }else {
+        console.log('no tasks available');
+        const noTasks = document.createElement('div');
+        noTasks.classList.add('nilTask');
+        noTasks.innerHTML = 'No tasks available Please add your tasks';
+        slideContainer.appendChild(noTasks); // Append the noTasks element to the document body
+      }
+    
+      }).catch((error) => {
           console.error("Error fetching tasks: ", error);
         });
       function animateDashOffset(circleId, startDate, deadline) {
@@ -397,8 +412,9 @@ const firebaseConfig = {
                 <td>${deadline.toLocaleString().substring(0, deadline.toLocaleString().length - 6)}</td>
                 <td>${task.status}</td>
                 <td>
-                  <ion-icon name="trash-outline" id = "deleteTaskBtn"></ion-icon>
-                  <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+                  <div><ion-icon name="trash-outline" id = "deleteTaskBtn"></ion-icon></div>
+                  <div><ion-icon name="create-outline"></ion-icon></div>
+                  <div><ion-icon name="eye-outline"></ion-icon></div>
                 </td>
               `;
               row.setAttribute('data-task-key', childSnapshot.key);
@@ -580,7 +596,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
                 .catch(error => {
                     console.error('Error deleting task:', error);
-                });
+              });
           }
       });
     } else {
