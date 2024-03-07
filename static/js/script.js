@@ -1,20 +1,22 @@
-const list = document.querySelectorAll('.list');
-function activeLink () {
-    list.forEach((item) => 
-    item.classList.remove('active'));
-    this.classList.add('active');
-}
-list.forEach((item) =>
-item.addEventListener("click", activeLink));
-  function showToast(message) {
-    var toast = document.getElementById("toast");
-    var toastMessage = document.getElementById("toast-message");
-    toastMessage.innerText = message;
-    toast.style.opacity = 1;
+// Attach click event listener to navigation links
+const listItems = document.querySelectorAll('.navigation ul li');
+listItems.forEach(item => {
+    item.addEventListener('click', () => {
+        // Remove 'active' class from all list items
+        listItems.forEach(li => li.classList.remove('active'));
+        // Add 'active' class to the clicked list item
+        item.classList.add('active');
+    });
+});
+function showToast(message) {
+  var toast = document.getElementById("toast");
+  var toastMessage = document.getElementById("toast-message");
+  toastMessage.innerText = message;
+  toast.style.opacity = 1;
     setTimeout(function(){
-        toast.style.opacity = 0;
-    }, 5000); // Adjust the duration of the toast
-  }
+      toast.style.opacity = 0;
+    }, 3000); // Adjust the duration of the toast
+}
 // Js Date and time
 const currentTime = () => {
   const current_time = document.getElementById("current_time");
@@ -413,7 +415,7 @@ const firebaseConfig = {
                 <td>${task.status}</td>
                 <td>
                   <div><ion-icon name="trash-outline" id = "deleteTaskBtn"></ion-icon></div>
-                  <div><ion-icon name="create-outline"></ion-icon></div>
+                  <div><ion-icon name="create-outline" id = "editTaskBtn"></ion-icon></div>
                   <div><ion-icon name="eye-outline"></ion-icon></div>
                 </td>
               `;
@@ -604,6 +606,98 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 });
+document.addEventListener('DOMContentLoaded', function() {
+  // Listen for changes in authentication state
+  onAuthStateChanged(auth, function(user) {
+      if (user) {
+          const userId = user.uid;
+          const tasksRef = ref(db, `users/${userId}/tasks`);
+          // Add event listener to the table body and listen for clicks on the edit icon
+          const taskTableBody = document.getElementById('tasks-table-body');
+          taskTableBody.addEventListener('click', function(event) {
+              // Check if the clicked element is the edit icon
+              if (event.target && event.target.id === 'editTaskBtn') {
+                  console.log('Edit button clicked');
+                  // Get the task key from the parent row
+                  const row = event.target.closest('tr');
+                  const taskKey = row.getAttribute('data-task-key');
+                  // Retrieve the task data from the database
+                  const taskRef = child(tasksRef, taskKey);
+                  get(taskRef).then((snapshot) => {
+                      const taskData = snapshot.val();
+                      const taskKey = snapshot.key;
+                      // Call the function to display the edit form with the task data
+                      console.log(taskData);
+                      displayEditForm(taskData, taskKey);
+                  }).catch((error) => {
+                      console.error('Error getting task data:', error);
+                  });
+              }
+          });
+      } else {
+          console.log('No user is currently signed in.');
+      }
+  });
+});
+// Function to display the edit form with the task data
+function displayEditForm(taskData, taskKey) {
+  // Retrieve the form elements
+  const editFormContainer = document.querySelector('.edit-form-container');
+  const taskIdInput = editFormContainer.querySelector('#task-Id');
+  const taskNameInput = editFormContainer.querySelector('#task-name');
+  const taskDescriptionInput = editFormContainer.querySelector('#task-description');
+  const taskStartTimeInput = editFormContainer.querySelector('#task-start-time');
+  const taskDueTimeInput = editFormContainer.querySelector('#task-due-time');
+
+  // Populate the form fields with the task data
+  taskIdInput.value = taskKey; 
+  taskNameInput.value = taskData.taskTitle;
+  taskDescriptionInput.value = taskData.taskDescription;
+  taskStartTimeInput.value = taskData.startDate;
+  taskDueTimeInput.value = taskData.deadline;
+
+  // Disable the task ID field to make it inactive
+  taskIdInput.disabled = true;
+
+  // Display the edit form
+  editFormContainer.style.display = 'block';
+
+  // Add event listener for form submission
+  const editForm = editFormContainer.querySelector('form');
+  editForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+      // Retrieve updated task data from the form
+      const updatedTaskData = {
+          name: taskNameInput.value,
+          description: taskDescriptionInput.value,
+          startTime: taskStartTimeInput.value,
+          dueTime: taskDueTimeInput.value
+          // Add other properties as needed
+      };
+      // Add your logic here to update the task data in the database
+      // After updating the task, you can close the edit form
+      editFormContainer.style.display = 'none';
+  });
+
+  // Add event listener to close button
+  const closeButton = editFormContainer.querySelector('#closeBtn');
+  closeButton.addEventListener('click', function() {
+      editFormContainer.style.display = 'none';
+  });
+}
+
+// Function to handle form submission after editing
+function editTaskFormSubmit(event) {
+  event.preventDefault();
+  // Retrieve updated task data from the form
+  const taskName = document.getElementById('task-name').value;
+  const taskDescription = document.getElementById('task-description').value;
+  // Add your logic here to update the task data in the database
+  // After updating the task, you can close the edit form (e.g., close the modal)
+  const editForm = document.getElementById('edit-form');
+  editForm.style.display = 'none';
+}
+
 
 
 
