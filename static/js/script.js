@@ -80,7 +80,7 @@ import {
     getAuth, onAuthStateChanged, signOut
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getDatabase, push, ref,remove,
+import { getDatabase, push, ref,remove,set,
     get, child, query, orderByChild, equalTo
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 // import config from "./config";
@@ -388,7 +388,7 @@ const firebaseConfig = {
 
       }
        // Fetch all tasks and display in the browser table
-        get(userTasksRef).then((snapshot) => {
+       get(userTasksRef).then((snapshot) => {
           const totalTasks = snapshot.size;
           const usertotalTasks = document.getElementById('totalTasks');
           usertotalTasks.textContent = totalTasks.toString();
@@ -641,7 +641,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 // Function to display the edit form with the task data
 function displayEditForm(taskData, taskKey) {
-  // Retrieve the form elements
   const editFormContainer = document.querySelector('.edit-form-container');
   const taskIdInput = editFormContainer.querySelector('#task-Id');
   const taskNameInput = editFormContainer.querySelector('#task-name');
@@ -649,55 +648,79 @@ function displayEditForm(taskData, taskKey) {
   const taskStartTimeInput = editFormContainer.querySelector('#task-start-time');
   const taskDueTimeInput = editFormContainer.querySelector('#task-due-time');
 
-  // Populate the form fields with the task data
   taskIdInput.value = taskKey; 
   taskNameInput.value = taskData.taskTitle;
   taskDescriptionInput.value = taskData.taskDescription;
   taskStartTimeInput.value = taskData.startDate;
   taskDueTimeInput.value = taskData.deadline;
 
-  // Disable the task ID field to make it inactive
   taskIdInput.disabled = true;
 
-  // Display the edit form
   editFormContainer.style.display = 'block';
 
-  // Add event listener for form submission
   const editForm = editFormContainer.querySelector('form');
   editForm.addEventListener('submit', function(event) {
       event.preventDefault();
-      // Retrieve updated task data from the form
       const updatedTaskData = {
-          name: taskNameInput.value,
-          description: taskDescriptionInput.value,
-          startTime: taskStartTimeInput.value,
-          dueTime: taskDueTimeInput.value
+          taskTitle: taskNameInput.value,
+          taskDescription: taskDescriptionInput.value,
+          startDate: taskStartTimeInput.value,
+          deadline: taskDueTimeInput.value
           // Add other properties as needed
       };
-      // Add your logic here to update the task data in the database
-      // After updating the task, you can close the edit form
-      editFormContainer.style.display = 'none';
+      updateTask(taskKey, updatedTaskData);
   });
 
-  // Add event listener to close button
   const closeButton = editFormContainer.querySelector('#closeBtn');
   closeButton.addEventListener('click', function() {
       editFormContainer.style.display = 'none';
   });
 }
 
-// Function to handle form submission after editing
+function updateTask(taskKey, updatedTaskData) {
+  const userId = auth.currentUser.uid;
+  const taskRef = ref(db, `users/${userId}/tasks/${taskKey}`);
+
+  // Retrieve the existing task data
+  get(taskRef)
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        // Get the existing data
+        const existingData = snapshot.val();
+
+        // Merge updated fields with existing data
+        const mergedData = { ...existingData, ...updatedTaskData };
+
+        // Update the task data with merged data
+        set(taskRef, mergedData)
+          .then(() => {
+            console.log('Task data updated successfully');
+            // Optionally provide user feedback here
+            const editForm = document.getElementById('edit-form');
+            editForm.style.display = 'none';
+          })
+          .catch((error) => {
+            console.error('Error updating task data:', error);
+            // Handle error if needed, e.g., display an error message to the user
+          });
+      } else {
+        console.error('Task does not exist');
+        // Handle the case where the task does not exist
+      }
+    })
+    .catch((error) => {
+      console.error('Error retrieving task data:', error);
+      // Handle error if needed
+    });
+}
+
+
+// You can remove this function if not needed
 function editTaskFormSubmit(event) {
   event.preventDefault();
-  // Retrieve updated task data from the form
-  const taskName = document.getElementById('task-name').value;
-  const taskDescription = document.getElementById('task-description').value;
-  // Add your logic here to update the task data in the database
-  // After updating the task, you can close the edit form (e.g., close the modal)
   const editForm = document.getElementById('edit-form');
   editForm.style.display = 'none';
 }
-
 
 
 
