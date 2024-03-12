@@ -76,11 +76,11 @@ for(selects of statusOption) {
    }
 }
 
-import { 
+import {
     getAuth, onAuthStateChanged, signOut
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getDatabase, push, ref,remove,set,
+import { getDatabase, push, ref,remove,set,update,
     get, child, query, orderByChild, equalTo
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 // import config from "./config";
@@ -150,7 +150,7 @@ const firebaseConfig = {
             //elements in your HTML with IDs "firstName" and "lastName"
             const firstNameElement = document.getElementById("userFirstName");
             const lastNameElement = document.getElementById("userLastName");
- 
+
             // Set the text content of the elements to the fetched first name and last name
             firstNameElement.textContent = firstName;
             lastNameElement.textContent = lastName;
@@ -162,7 +162,7 @@ const firebaseConfig = {
         });
 
         // // Reference to the tasks node for the user
-       const statusToQuery = 'On Progress'; // Corrected to match the status in the database
+       const statusToQuery = 'In Progress'; // Corrected to match the status in the database
        const tasksRef = ref(db, `users/${userId}/tasks`);
 
        // Query to filter tasks where status is "On Progress"
@@ -196,13 +196,13 @@ const firebaseConfig = {
                    taskContainer.appendChild(taskElement);
                });
            } else {
-               console.log("No On Progress tasks found...");
+               console.log("No In Progress tasks found...");
                const taskContainer = document.getElementById('task-container');
                // Clear previous results
                taskContainer.innerHTML = ''
                const nilOngoingTask = document.createElement('div');
                nilOngoingTask.classList.add('on-progress-nil');
-               nilOngoingTask.innerHTML = 'No On Progress Tasks Found add some to display';
+               nilOngoingTask.innerHTML = 'No In Progress Tasks Found add some to display';
                taskContainer.appendChild(nilOngoingTask);
            }
        }).catch((error) => {
@@ -260,7 +260,7 @@ const firebaseConfig = {
                       </svg>
                       <div id="seconds">${timeLapse.seconds} <br> <span>Seconds</span></div>
                     </div>
-                  </div>                   
+                  </div>
                 </div>
                 <div class="card-title">
                   <h4 class="id">${childSnapshot.key}</h4>
@@ -274,7 +274,7 @@ const firebaseConfig = {
                   <input type="button" value="view" class="input">
                 </div>
                 </div>
-              </div>`;   
+              </div>`;
           });
           document.addEventListener('DOMContentLoaded', () => {
             // Animate the dashoffset for each circle element
@@ -283,11 +283,11 @@ const firebaseConfig = {
             animateDashOffset('mm', startDate, deadline);
             animateDashOffset('ss', startDate, deadline);
             });
-      
+
         // Set the HTML of the slide container
         slideContainer.innerHTML = slidesHTML;
 
-        
+
         // Initialize Swiper after adding slides
         const swiper = new Swiper('.swiper', {
           // Optional parameters
@@ -299,7 +299,7 @@ const firebaseConfig = {
           },
           // Slide transition effect
           effect: 'fade', // Change the effect to your desired animation type
-                  
+
           // Fade effect specific options
           fadeEffect: {
           crossFade: true // Enable cross-fade animation
@@ -309,13 +309,13 @@ const firebaseConfig = {
           el: '.swiper-pagination',
           clickable: true,
           },
-                
+
           // If we need navigation buttons
           navigation: {
           nextEl: '.swiper-button-next',
           prevEl: '.swiper-button-prev',
           },
-                
+
           // If we need scrollbar
           scrollbar: {
           el: '.swiper-scrollbar',
@@ -328,7 +328,7 @@ const firebaseConfig = {
         noTasks.innerHTML = 'No tasks available Please add your tasks';
         slideContainer.appendChild(noTasks); // Append the noTasks element to the document body
       }
-    
+
       }).catch((error) => {
           console.error("Error fetching tasks: ", error);
         });
@@ -347,14 +347,14 @@ const firebaseConfig = {
         const dasharray = length + ' ' + length;
         circle.style.strokeDasharray = dasharray;
         circle.style.strokeDashoffset = dashoffset;
-        
+
       };
       function getColor(progress) {
         // Define colors for different progress values
         const colors = [
             '#7f11c4',
-            '#61d81c', 
-            '#0ef', 
+            '#61d81c',
+            '#0ef',
             '#2987a3',
         ];
         // Calculate color index based on progress
@@ -372,13 +372,13 @@ const firebaseConfig = {
         const millisecondsPerHour = millisecondsPerMinute * 60;
         const millisecondsPerDay = millisecondsPerHour * 24;
 
-        
+
         // Calculate the elapsed time
         const days = Math.floor(difference / millisecondsPerDay);
         const hours = Math.floor((difference % millisecondsPerDay) / millisecondsPerHour);
         const minutes = Math.floor((difference % millisecondsPerHour) / millisecondsPerMinute);
         const seconds = Math.floor((difference % millisecondsPerMinute) / millisecondsPerSecond);
-       
+
         return {
           days: days,
           hours: hours,
@@ -412,11 +412,12 @@ const firebaseConfig = {
                 <td>${task.priority}</td>
                 <td>${startDate.toLocaleString().substring(0, startDate.toLocaleString().length - 6)}</td>
                 <td>${deadline.toLocaleString().substring(0, deadline.toLocaleString().length - 6)}</td>
-                <td>${task.status}</td>
+                <td class = "task-status">${task.status}</td>
                 <td>
-                  <div><ion-icon name="trash-outline" id = "deleteTaskBtn"></ion-icon></div>
-                  <div><ion-icon name="create-outline" id = "editTaskBtn"></ion-icon></div>
-                  <div><ion-icon name="eye-outline"></ion-icon></div>
+                  <div><ion-icon name="trash-outline" id = "deleteTaskBtn"></ion-icon>
+                    <ion-icon name="create-outline" id = "editTaskBtn"></ion-icon>
+                    <ion-icon name="eye-outline" id = "startTaskBtn"></ion-icon>
+                  </div>
                 </td>
               `;
               row.setAttribute('data-task-key', childSnapshot.key);
@@ -432,14 +433,13 @@ const firebaseConfig = {
               row.innerHTML = '<td colspan="8">No tasks available</td>'; // Colspan to span across all columns
               row.querySelectorAll('td').forEach(td => {
                 td.style.width = '100%';
-                td.style.textAlign = 'center'; 
+                td.style.textAlign = 'center';
               });
               taskTableBody.appendChild(row);
           }
-          
         }).catch((error) => {
            console.error("Error fetching tasks: ", error);
-          });       
+          });
        } else {
          // User is signed out
          console.log("User is signed out");
@@ -648,7 +648,7 @@ function displayEditForm(taskData, taskKey) {
   const taskStartTimeInput = editFormContainer.querySelector('#task-start-time');
   const taskDueTimeInput = editFormContainer.querySelector('#task-due-time');
 
-  taskIdInput.value = taskKey; 
+  taskIdInput.value = taskKey;
   taskNameInput.value = taskData.taskTitle;
   taskDescriptionInput.value = taskData.taskDescription;
   taskStartTimeInput.value = taskData.startDate;
@@ -680,7 +680,6 @@ function displayEditForm(taskData, taskKey) {
 function updateTask(taskKey, updatedTaskData) {
   const userId = auth.currentUser.uid;
   const taskRef = ref(db, `users/${userId}/tasks/${taskKey}`);
-
   // Retrieve the existing task data
   get(taskRef)
     .then((snapshot) => {
@@ -715,12 +714,6 @@ function updateTask(taskKey, updatedTaskData) {
 }
 
 
-// You can remove this function if not needed
-function editTaskFormSubmit(event) {
-  event.preventDefault();
-  const editForm = document.getElementById('edit-form');
-  editForm.style.display = 'none';
-}
 
 
 

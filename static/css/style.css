@@ -92,7 +92,9 @@ header{
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
   }
-  
+  .dropdown-content .selection{
+    list-style-type: none;
+  }
   .dropdown-content a {
     color: black;
     padding: 12px 16px;
@@ -872,16 +874,21 @@ header{
     align-items: center;
     justify-content: center;
 }
-#tasks-table-body tr td div{
+#tasks-table-body tr td div{ 
     width: 100%; 
 }
-#tasks-table-body tr td div ion-icon {
-    color: #78e0b5 !important;
+#tasks-table-body tr td div ion-icon:nth-child(1) {
+    color: #d14747;
 }
-
+#tasks-table-body tr td div ion-icon:nth-child(2) {
+    color: #78e0b5;
+}
+#tasks-table-body tr td div ion-icon:nth-child(3) {
+    color: #1aec4e;
+}
 #tasks-table-body tr td div ion-icon:nth-child(1):hover,
 #tasks-table-body tr td div ion-icon:nth-child(1):focus {
-    color: #28fda4 !important; /* Change the color on hover or focus */
+    color: #a71111; /* Change the color on hover or focus */
     transform: scale(1.2); /* Scale the icon on hover or focus */
 }
 #tasks-table-body tr td div ion-icon:nth-child(2):hover,
@@ -892,7 +899,12 @@ header{
 #tasks-table-body tr td div ion-icon:nth-child(3):focus {
     transform: scale(1.2); /* Scale the icon on hover or focus */
 }
-
+#pending-tasks{
+    color: #ffc107;
+}
+#onhold-tasks{
+    color:  #17a2b8;
+}
 /* scroll bar */
 ::-webkit-scrollbar{
     width: 6px;
@@ -1149,9 +1161,235 @@ header{
     width: 100%;
     height: calc(100% - 80px);
     margin: 0 auto;
+    position: relative;
     padding: 10px;
    
+    display: grid;
+    grid-template-areas: 
+    'main-footer-widget main-footer-widget main-footer-widget'
+    'footer-widget footer-widget footer-widget'
+    ;
+    grid-template-rows: auto 50px;  
 }
+.footer-pane .main-nav,
+.footer-pane .footer-nav
+{
+    color: #fff;
+    padding: 20px;
+}
+.footer-pane .main-nav{
+    position: relative;
+    width: 100%;
+    grid-area: main-footer-widget;
+
+}
+.footer-pane .footer-nav{
+    position: relative;
+    width: 100%;
+    grid-area: footer-widget;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.footer-pane .main-nav .container-contact-form{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 90%;
+    background: #fff;
+    border-radius: 6px;
+    padding: 30px 60px 40px 40px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+.footer-pane .main-nav .container-contact-form .content{
+    display:  flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.container-contact-form .content .left-side{
+    width: 25%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 15px;
+    line-height: 1.5;
+    position: relative;
+}
+.content .left-side::before{
+    content: '';
+    position: absolute;
+    height: 70%;
+    width: 2px;
+    top: 50%;
+    right: -15px;
+    transform: translateY(-50%);
+    background: #afafb6;
+}
+.content .left-side .details{
+    margin: 14px;
+    text-align: center;
+
+}
+.content .left-side .details i{
+    font-size: 30px;
+    color: #3e2093;
+    margin-bottom: 10px;
+}
+.content .left-side .details .topic{
+    font-size: 18px;
+    font-weight: 500;
+}
+.content .left-side .details .text-one,
+.content .left-side .details .text-two
+{
+    font-size: 14px;
+    color: #afafb6;
+}
+.container-contact-form .content .right-side{
+    width: 75%;
+    margin-left: 75px;
+    line-height: 1.5;
+
+}
+.content .right-side .topic-text{
+    font-size: 23px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #3e2093;
+}
+.right-side .input-box{
+    height: 50px;
+    width: 100%;
+    margin: 12px 0;
+}
+.right-side .input-box textarea,
+.right-side .input-box input{
+    height: 100%;
+    width: 100%;
+    border: none;
+    background: #f0f1f8;
+    border-radius: 6px;
+    font-size: 16px;
+    padding: 0 15px;
+    resize: none;
+}
+.right-side .message-box{
+    min-height: 110px;
+    margin-top: 6px;
+}
+.right-side .button{
+    display: inline-block;
+    margin-top: 6px;
+}
+.right-side .button input[type="button"]{
+ color: #fff;
+ font-size: 18px;
+ outline: none;
+ border: none;
+ padding: 8px 16px;
+ border-radius: 6px;
+ background: #3e2093;
+ cursor: pointer;
+ transition: all 0.3s ease;
+}
+.button input[type="button"]:hover{
+    background: #5029bc;
+}
+
+.social-links {
+    list-style: none;
+    padding: 0;
+    display: flex;
+  }
+
+  .social-links li {
+    margin-right: 20px;
+  }
+  .social-links li a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 20px;
+    position: relative;
+    transition: color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .social-links li a:hover {
+    color: rgb(199, 206, 212)
+  }
+
+  .social-links li a::before {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #007bff;
+    transform: scaleX(0);
+    transition: transform 0.3s;
+    transform-origin: right;
+  }
+
+  .social-links li a:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .social-links li.github a::before {
+    background-color: #60635e; 
+  }
+
+  .social-links li.linkedin a::before {
+    background-color: #0077b5;
+  }
+
+  .social-links li.x a::before {
+    background-color: #4b42c9; 
+  }
+
+  .social-links li a span {
+    display: inline-block;
+    font-size: 1rem;
+    margin-right: 5px;
+  }
+@media (max-width: 950px) {
+    .container{
+        width: 90%;
+        padding: 30px 35px 40px 35px;
+    } 
+}
+@media (max-width: 820px) {
+    .container{
+        margin: 40px 0;
+        height: 100%;
+
+    } 
+    .container .content{
+        flex-direction: column-reverse;
+    }
+    .container .content .left-side{
+        width: 100%;
+        flex-direction: row;
+        margin-top: 40px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .container .content .left-side::before{
+        display: none;
+    }
+    .container .content .right-side{
+        width: 100%;
+        margin-left: 0;
+    }
+}
+
 /* @keyframes animate {
     0%{
         transform: translateY(0) scaleX(1);
