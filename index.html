@@ -123,21 +123,6 @@
                                 <div class="timeline-column">
                                     <div class="timeline-box">
                                         <div class="timeline-content" id="task-container">
-                                            <div class="content"> 
-                                                <div class="year"><ion-icon name="calendar-outline"></ion-icon><h4>04:00 AM</h4></div>
-                                                <h3>Wake Up</h3>
-                                                <p>Hit to the Gym</p>
-                                            </div>
-                                            <div class="content">
-                                                <div class="year"><ion-icon name="calendar-outline"></ion-icon> <h4>04:00 AM</h4></div>
-                                                <h3>Meeting with client 0a1</h3>
-                                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae iusto eius sunt culpa ullam vitae voluptas debitis ut, </p>
-                                            </div>
-                                            <div class="content">
-                                                <div class="year"><ion-icon name="calendar-outline"></ion-icon> <h4>04:00 AM</h4></div>
-                                                <h3>Design a login Form</h3>
-                                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae iusto eius sunt culpa ullam vitae voluptas debitis ut, </p>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -183,6 +168,35 @@
                             <tbody id="tasks-table-body"></tbody>
                         </table>
                     </div>
+                </div>
+                <!-- HTML structure for the popup -->
+                <div id="startTaskPopupConfirmation">
+                    <div class="edit-form-container-2">
+                    <p>Are you sure you want to start this task?</p>
+                        <form id="start-task-form">
+                            <div class="form-group">
+                                <label for="task-name">Task ID:</label>
+                                <input type="text" id="task-Id" name="task-Id" required>
+                              </div>
+                            <div class="form-group">
+                                <label for="task-name">Start Time:</label>
+                                <input type="text" id="task-start-time" name="task-start-time" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="task-name">Due Time:</label>
+                                <input type="datetime-local" id="task-due-time" name="task-due-time" required>
+                            </div>
+                            <div class="form-group">
+                                <button id="cancelBtn">Cancel</button>
+                                <button id="okBtn">Start Task</button>
+                            </div>
+                        </form>
+                      </div>
+                </div>
+                <div class="confirmation-form" id="deleteConfirmationForm">
+                    <div id="cancelDeleteBtn"><ion-icon name="close-outline"></ion-icon></div>
+                    <p>Are you sure you want to delete this task?</p>
+                    <div class="cancelBtnArea"><button id="confirmDeleteBtn">Confirm</button></div>
                 </div>
                 <div class="bottom-widget">
                     <h2>table nav - links</h2>

@@ -568,6 +568,8 @@ addNewTask.addEventListener('submit', (event) => {
     console.log("Data successfully written to the database.");
     addNewTask.reset();
     hideTaskForm();
+    location.reload();
+    document.getElementById('home').scrollIntoView();
   })
   .catch((error) => {
     console.error("Error writing data to the database: ", error);
@@ -588,55 +590,70 @@ document.addEventListener('DOMContentLoaded', function() {
               // Get the task key from the parent row
               const row = event.target.closest('tr');
               const taskKey = row.getAttribute('data-task-key');
+
+              const confirmationForm = document.getElementById('deleteConfirmationForm');
+              confirmationForm.style.display = 'block'
               // Use the task key to create a reference to the specific task in the database
+              // Event listener for the confirm deletion button
+              document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+                // Use the task key to create a reference to the specific task in the database
+                const taskRef = child(tasksRef, taskKey);
+                remove(taskRef)
+                    .then(() => {
+                        console.log('Task deleted successfully');
+                        // Optionally, remove the row from the table
+                        row.remove();
+                        // Hide the confirmation form
+                        confirmationForm.style.display = 'none';
+                    })
+                    .catch(error => {
+                        console.error('Error deleting task:', error);
+                        // Hide the confirmation form
+                        confirmationForm.style.display = 'none';
+                    });
+            });
+
+  // Event listener for the cancel button
+  document.getElementById('cancelDeleteBtn').addEventListener('click', function() {
+      // Hide the confirmation form
+      confirmationForm.style.display = 'none';
+  });
+          }else if(event.target && event.target.id === 'editTaskBtn') {
+              console.log('Edit button clicked');
+              // Get the task key from the parent row
+              const row = event.target.closest('tr');
+              const taskKey = row.getAttribute('data-task-key');
+              // Retrieve the task data from the database
               const taskRef = child(tasksRef, taskKey);
-              remove(taskRef)
-                .then(() => {
-                    console.log('Task deleted successfully');
-                    // Optionally, remove the row from the table
-                    row.remove();
-                })
-                .catch(error => {
-                    console.error('Error deleting task:', error);
+              get(taskRef).then((snapshot) => {
+                  const taskData = snapshot.val();
+                  const taskKey = snapshot.key;
+                  // Call the function to display the edit form with the task data
+                  console.log(taskData);
+                  displayEditForm(taskData, taskKey);
+              }).catch((error) => {
+                  console.error('Error getting task data:', error);
+              });
+          }else if(event.target && event.target.id === 'startTaskBtn') {
+            const row = event.target.closest('tr');
+              const taskKey = row.getAttribute('data-task-key');
+              // Retrieve the task data from the database
+              const taskRef = child(tasksRef, taskKey);
+              get(taskRef).then((snapshot) => {
+                  const taskData = snapshot.val();
+                  const taskKey = snapshot.key;
+                  // Call the function to display the edit form with the task data
+                  console.log(taskData);
+                  displayStartTaskForm(taskData, taskKey);
+                  startTaskBtnClickHandler();
+              }).catch((error) => {
+                  console.error('Error getting task data:', error);
               });
           }
-      });
+      })
     } else {
       console.log('No user is currently signed in.');
     }
-  });
-});
-document.addEventListener('DOMContentLoaded', function() {
-  // Listen for changes in authentication state
-  onAuthStateChanged(auth, function(user) {
-      if (user) {
-          const userId = user.uid;
-          const tasksRef = ref(db, `users/${userId}/tasks`);
-          // Add event listener to the table body and listen for clicks on the edit icon
-          const taskTableBody = document.getElementById('tasks-table-body');
-          taskTableBody.addEventListener('click', function(event) {
-              // Check if the clicked element is the edit icon
-              if (event.target && event.target.id === 'editTaskBtn') {
-                  console.log('Edit button clicked');
-                  // Get the task key from the parent row
-                  const row = event.target.closest('tr');
-                  const taskKey = row.getAttribute('data-task-key');
-                  // Retrieve the task data from the database
-                  const taskRef = child(tasksRef, taskKey);
-                  get(taskRef).then((snapshot) => {
-                      const taskData = snapshot.val();
-                      const taskKey = snapshot.key;
-                      // Call the function to display the edit form with the task data
-                      console.log(taskData);
-                      displayEditForm(taskData, taskKey);
-                  }).catch((error) => {
-                      console.error('Error getting task data:', error);
-                  });
-              }
-          });
-      } else {
-          console.log('No user is currently signed in.');
-      }
   });
 });
 // Function to display the edit form with the task data
@@ -655,6 +672,8 @@ function displayEditForm(taskData, taskKey) {
   taskDueTimeInput.value = taskData.deadline;
 
   taskIdInput.disabled = true;
+  taskStartTimeInput.disabled = true;
+  taskDueTimeInput.disabled = true;
 
   editFormContainer.style.display = 'block';
 
@@ -688,15 +707,14 @@ function updateTask(taskKey, updatedTaskData) {
         const existingData = snapshot.val();
 
         // Merge updated fields with existing data
-        const mergedData = { ...existingData, ...updatedTaskData };
-
+        const mergedData = { ...existingData, ...updatedTaskData }
         // Update the task data with merged data
         set(taskRef, mergedData)
           .then(() => {
             console.log('Task data updated successfully');
             // Optionally provide user feedback here
-            const editForm = document.getElementById('edit-form');
-            editForm.style.display = 'none';
+            document.getElementById('startTaskPopupConfirmation').style.visibility = 'hidden';
+            location.reload();
           })
           .catch((error) => {
             console.error('Error updating task data:', error);
@@ -712,56 +730,97 @@ function updateTask(taskKey, updatedTaskData) {
       // Handle error if needed
     });
 }
-document.addEventListener('DOMContentLoaded', function() {
-  onAuthStateChanged(auth, function(user) {
-      if (user) {
-          const userId = user.uid;
-          const tasksRef = ref(db, `users/${userId}/tasks`);
-          // Add event listener to the table body and listen for clicks on the start task icon
-          const taskTableBody = document.getElementById('tasks-table-body');
-          taskTableBody.addEventListener('click', function(event) {
-              // Check if the clicked element is the start task icon
-              if (event.target && event.target.id === 'startTaskBtn') {
-                  // Get the task key from the data attribute of the parent row
-                  const taskKey = event.target.closest('tr').dataset.taskKey;
-                  const taskRef = ref(db, `users/${userId}/tasks/${taskKey}`);
-                  get(taskRef)
-                  .then((snapshot) => {
-                      // Extract current task data
-                      const currentData = snapshot.val();
-                      let newStatus = currentData.status; // New status
-                      const statusColor = 'yellow'; // Font color
-                      // Check if the status is "On Hold" or "Pending", then switch to "In Progress"
-                      if (currentData.status === 'On Hold' || currentData.status === 'Pending') {
-                          newStatus = 'In Progress';
-                          // Update the task status and status color in the database
-                          update(taskRef, { status: newStatus, statusColor: statusColor })
-                          .then(() => {
-                              // Send success message to the user
-                              alert('Task status updated successfully');
-                              // Optionally, update the UI to reflect the status change
-                          })
-                          .catch((error) => {
-                              console.error('Error updating task status:', error);
-                              // Send error message to the user
-                              alert('Error updating task status. Please try again later.');
-                          });
-                      } else {
-                          // Task is already in progress, no action needed
-                          alert('Task is already in progress.');
-                      }
-                  })
-                  .catch((error) => {
-                      console.error('Error fetching task data:', error);
-                      // Send error message to the user
-                      alert('Error fetching task data. Please try again later.');
-                  });
-              }
-          });
-      }
-  });
-});
+function displayStartTaskForm(taskData, taskKey) {
+  const startTaskFormContainer = document.querySelector('.edit-form-container-2');
+  const taskIdInput = startTaskFormContainer.querySelector('#task-Id');
+  const taskStartTimeInput = startTaskFormContainer.querySelector('#task-start-time');
+  const taskDueTimeInput = startTaskFormContainer.querySelector('#task-due-time');
 
+  taskIdInput.value = taskKey;
+  const timeZone = 'Africa/Nairobi';
+  const currentDateTime = new Date().toLocaleString('en-US', {timeZone:  timeZone, hour12: false}).slice(0, 16);
+  taskStartTimeInput.value = currentDateTime;
+  taskDueTimeInput.value = taskData.deadline;
+
+  taskIdInput.disabled = true;
+  taskStartTimeInput.disabled = true;
+
+  const startTaskForm = startTaskFormContainer.querySelector('#start-task-form');
+  startTaskForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+      const updatedTaskData = {
+          deadline: taskDueTimeInput.value,
+          startDate: taskStartTimeInput.value
+          // Add other properties as needed
+      };
+      startTask(taskKey, updatedTaskData);
+  });
+
+  const closeButton = document.querySelector('#closeBtn');
+  closeButton.addEventListener('click', function() {
+    startTaskFormContainer.style.display = 'none';
+  });
+}
+function startTask(taskKey, updatedTaskData) {
+  const userId = auth.currentUser.uid;
+  const taskRef = ref(db, `users/${userId}/tasks/${taskKey}`);
+  // Retrieve the existing task data
+  get(taskRef)
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        // Get the existing data
+        const existingData = snapshot.val();
+
+        // Merge updated fields with existing data
+        const mergedData = { ...existingData, ...updatedTaskData };
+         // Parse dates
+         const startingDate = new Date(mergedData.startDate);
+         const dueDate = new Date(mergedData.deadline);
+ 
+         // Validate dates
+         if (isNaN(startingDate.getTime()) || isNaN(dueDate.getTime())) {
+           console.error("Invalid date format.");
+           return; // Prevent further execution
+         }
+         // Check if start date is after due date
+         if (startingDate > dueDate) {
+          showToast("Start date cannot be after due date.");
+           return; // Prevent further execution
+         }
+          if (startingDate <= dueDate) {
+            // Update the task data with merged data
+            set(taskRef, { ...mergedData, status: 'In Progress'})
+              .then(() => {
+                console.log('Task status updated successfully');
+                document.getElementById('startTaskPopupConfirmation').style.visibility = 'hidden';
+                // Optionally provide user feedback here
+                console.log("Updated: " + taskRef);
+              })
+              .catch((error) => {
+                console.error('Error updating task data:', error);
+                // Handle error if needed, e.g., display an error message to the user
+              });
+            }
+          } else {
+            console.error('Task does not exist');
+            // Handle the case where the task does not exist
+          }
+        })
+        .catch((error) => {
+          console.error('Error retrieving task data:', error);
+          // Handle error if needed
+        });
+      
+}
+function startTaskBtnClickHandler() {
+  // Show confirmation popup
+  document.getElementById('startTaskPopupConfirmation').style.visibility = 'visible';
+
+  document.getElementById('cancelBtn').addEventListener('click', function() {
+  // Hide the popup if cancel is clicked
+  document.getElementById('startTaskPopupConfirmation').style.visibility = 'hidden';
+  });
+}
 
 
 
