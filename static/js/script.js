@@ -185,7 +185,24 @@ const firebaseConfig = {
           console.error("Error fetching user data:", error);
         });
 
+        
         // // Reference to the tasks node for the user
+       const pendingStatus = 'Pending'; // Corrected to match the status in the database
+
+       // Query to filter tasks where status is "On Progress"
+       const pendingTasksQuery = query(userTasksRef, orderByChild('status'), equalTo(pendingStatus));
+
+       // Retrieve data based on the query
+       get(pendingTasksQuery).then((snapshot) => {
+          const totalTasks = snapshot.size;
+          const userPendingTasks = document.getElementById('pendingTasks');
+          userPendingTasks.textContent = totalTasks.toString();
+          console.log("pending tasks", totalTasks)
+       }).catch((error) => {
+           console.error("Error retrieving ongoing tasks: ", error);
+      });
+
+       // Reference to the tasks node for the user
        const statusToQuery = 'In Progress'; // Corrected to match the status in the database
        const tasksRef = ref(db, `users/${userId}/tasks`);
 
@@ -221,6 +238,7 @@ const firebaseConfig = {
                });
            } else {
                console.log("No In Progress tasks found...");
+               showMessageToTheUser("No In Progress tasks found...", true);
                const taskContainer = document.getElementById('task-container');
                // Clear previous results
                taskContainer.innerHTML = ''
@@ -350,8 +368,8 @@ const firebaseConfig = {
         const noTasks = document.createElement('div');
         noTasks.classList.add('nilTask');
         noTasks.innerHTML = 'No tasks available Please add your tasks';
-        showMessageToTheUser(noTasks, true);
         slideContainer.appendChild(noTasks); // Append the noTasks element to the document body
+        showMessageToTheUser(noTasks, true);
       }
 
       }).catch((error) => {
@@ -572,7 +590,7 @@ addNewTask.addEventListener('submit', (event) => {
   // Check if start date is after due date
   if (startingDate > dueDate) {
     console.error("Start date cannot be after due date.");
-    showMessageToTheUser("Start date cannot be after due date.");
+    showMessageToTheUser("Start date cannot be after due date.", true);
     return; // Prevent further execution
   }
   // Push data to Firebase database
