@@ -6,6 +6,13 @@
     box-sizing: border-box;
     font-family: 'Montserrat', sans-serif;
 }
+@font-face {
+    font-family: 'Font Awesome';
+    src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2?v=4.7.0') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
 :root{
     --bg-color:  #1C181D;
     --home-bg-color: linear-gradient(120deg, #393952, #222535);
@@ -1094,6 +1101,19 @@ header{
     background: var(--btn-color);
     border-radius: 8px;
     color: #f0e7e7;
+}
+.toast-test{
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #333;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+        z-index: 999;
 }
 .edit-form-container {
     display: none;

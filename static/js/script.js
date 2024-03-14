@@ -8,6 +8,30 @@ listItems.forEach(item => {
         item.classList.add('active');
     });
 });
+// Function to display toast messages with animation
+function showMessageToTheUser(message, isError = false) {
+  const toastElement = document.getElementById('toastMessage');
+  toastElement.textContent = message;
+  
+  if (isError) {
+      toastElement.style.backgroundColor = '#ff6347'; // Red color for error messages
+  } else {
+      toastElement.style.backgroundColor = '#28a745'; // Green color for success messages
+  }
+
+  // Show the toast message
+  toastElement.style.opacity = 1;
+
+  // Animate the toast message
+  setTimeout(() => {
+      toastElement.style.opacity = 0;
+  }, 5000);
+}
+
+// Get references to the buttons
+const errorButton = document.getElementById('errorButton');
+const successButton = document.getElementById('successButton');
+
 function showToast(message) {
   var toast = document.getElementById("toast");
   var toastMessage = document.getElementById("toast-message");
@@ -326,6 +350,7 @@ const firebaseConfig = {
         const noTasks = document.createElement('div');
         noTasks.classList.add('nilTask');
         noTasks.innerHTML = 'No tasks available Please add your tasks';
+        showMessageToTheUser(noTasks, true);
         slideContainer.appendChild(noTasks); // Append the noTasks element to the document body
       }
 
@@ -473,12 +498,12 @@ const firebaseConfig = {
                     .then(() => {
                       // Sign-out successful.
                       console.log("User signed out successfully.");
+                      showMessageToTheUser("User signed out successfully.");
                     })
                     .catch((error) => {
                       // An error happened.
                       console.error("Error signing out:", error);
                     });
-                    console.log('Logout selected.');
                     window.location.href = 'login.html'
                   break;
               default:
@@ -531,6 +556,7 @@ addNewTask.addEventListener('submit', (event) => {
   // Check if any field is empty
   if (taskTitle === '' || taskDescription === '' || startDate === '' || deadline === '' || priority === '' || status === '') {
     console.error("All fields are required.");
+    showMessageToTheUser("All fields are required.", true);
     return; // Prevent further execution
   }
 
@@ -546,6 +572,7 @@ addNewTask.addEventListener('submit', (event) => {
   // Check if start date is after due date
   if (startingDate > dueDate) {
     console.error("Start date cannot be after due date.");
+    showMessageToTheUser("Start date cannot be after due date.");
     return; // Prevent further execution
   }
   // Push data to Firebase database
@@ -566,10 +593,10 @@ addNewTask.addEventListener('submit', (event) => {
   })
   .then(() => {
     console.log("Data successfully written to the database.");
+    showMessageToTheUser("Data successfully written to the database.");
     addNewTask.reset();
     hideTaskForm();
     location.reload();
-    document.getElementById('home').scrollIntoView();
   })
   .catch((error) => {
     console.error("Error writing data to the database: ", error);
@@ -586,7 +613,6 @@ document.addEventListener('DOMContentLoaded', function() {
       taskTableBody.addEventListener('click', function(event) {
           // Check if the clicked element is the delete icon
           if (event.target && event.target.id === 'deleteTaskBtn') {
-              console.log('Delete button clicked');
               // Get the task key from the parent row
               const row = event.target.closest('tr');
               const taskKey = row.getAttribute('data-task-key');
@@ -601,6 +627,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 remove(taskRef)
                     .then(() => {
                         console.log('Task deleted successfully');
+                        showMessageToTheUser('Task deleted successfully');
                         // Optionally, remove the row from the table
                         row.remove();
                         // Hide the confirmation form
@@ -695,40 +722,37 @@ function displayEditForm(taskData, taskKey) {
       editFormContainer.style.display = 'none';
   });
 }
+async function updateTask(taskKey, updatedTaskData) {
+  try {
+    const userId = auth.currentUser.uid;
+    const taskRef = ref(db, `users/${userId}/tasks/${taskKey}`);
 
-function updateTask(taskKey, updatedTaskData) {
-  const userId = auth.currentUser.uid;
-  const taskRef = ref(db, `users/${userId}/tasks/${taskKey}`);
-  // Retrieve the existing task data
-  get(taskRef)
-    .then((snapshot) => {
-      if (snapshot.exists()) {
-        // Get the existing data
-        const existingData = snapshot.val();
+    // Retrieve the existing task data asynchronously
+    const snapshot = await get(taskRef);
 
-        // Merge updated fields with existing data
-        const mergedData = { ...existingData, ...updatedTaskData }
-        // Update the task data with merged data
-        set(taskRef, mergedData)
-          .then(() => {
-            console.log('Task data updated successfully');
-            // Optionally provide user feedback here
-            document.getElementById('startTaskPopupConfirmation').style.visibility = 'hidden';
-            location.reload();
-          })
-          .catch((error) => {
-            console.error('Error updating task data:', error);
-            // Handle error if needed, e.g., display an error message to the user
-          });
-      } else {
-        console.error('Task does not exist');
-        // Handle the case where the task does not exist
-      }
-    })
-    .catch((error) => {
-      console.error('Error retrieving task data:', error);
-      // Handle error if needed
-    });
+    if (snapshot.exists()) {
+      // Get the existing data
+      const existingData = snapshot.val();
+
+      // Merge updated fields with existing data
+      const mergedData = { ...existingData, ...updatedTaskData };
+
+      // Update the task data with merged data asynchronously
+      await set(taskRef, mergedData);
+
+      console.log('Task data updated successfully');
+      showMessageToTheUser('Task data updated successfully');
+      // Optionally provide user feedback here
+      document.getElementById('startTaskPopupConfirmation').style.visibility = 'hidden';
+      location.reload();
+    } else {
+      console.error('Task does not exist');
+      // Handle the case where the task does not exist
+    }
+  } catch (error) {
+    console.error('Error updating task data:', error);
+    // Handle error if needed
+  }
 }
 function displayStartTaskForm(taskData, taskKey) {
   const startTaskFormContainer = document.querySelector('.edit-form-container-2');
@@ -761,57 +785,57 @@ function displayStartTaskForm(taskData, taskKey) {
     startTaskFormContainer.style.display = 'none';
   });
 }
-function startTask(taskKey, updatedTaskData) {
-  const userId = auth.currentUser.uid;
-  const taskRef = ref(db, `users/${userId}/tasks/${taskKey}`);
-  // Retrieve the existing task data
-  get(taskRef)
-    .then((snapshot) => {
-      if (snapshot.exists()) {
-        // Get the existing data
-        const existingData = snapshot.val();
+async function startTask(taskKey, updatedTaskData) {
+  try {
+    const userId = auth.currentUser.uid;
+    const taskRef = ref(db, `users/${userId}/tasks/${taskKey}`);
 
-        // Merge updated fields with existing data
-        const mergedData = { ...existingData, ...updatedTaskData };
-         // Parse dates
-         const startingDate = new Date(mergedData.startDate);
-         const dueDate = new Date(mergedData.deadline);
- 
-         // Validate dates
-         if (isNaN(startingDate.getTime()) || isNaN(dueDate.getTime())) {
-           console.error("Invalid date format.");
-           return; // Prevent further execution
-         }
-         // Check if start date is after due date
-         if (startingDate > dueDate) {
-          showToast("Start date cannot be after due date.");
-           return; // Prevent further execution
-         }
-          if (startingDate <= dueDate) {
-            // Update the task data with merged data
-            set(taskRef, { ...mergedData, status: 'In Progress'})
-              .then(() => {
-                console.log('Task status updated successfully');
-                document.getElementById('startTaskPopupConfirmation').style.visibility = 'hidden';
-                // Optionally provide user feedback here
-                console.log("Updated: " + taskRef);
-              })
-              .catch((error) => {
-                console.error('Error updating task data:', error);
-                // Handle error if needed, e.g., display an error message to the user
-              });
-            }
-          } else {
-            console.error('Task does not exist');
-            // Handle the case where the task does not exist
-          }
-        })
-        .catch((error) => {
-          console.error('Error retrieving task data:', error);
-          // Handle error if needed
-        });
-      
+    // Retrieve the existing task data asynchronously
+    const snapshot = await get(taskRef);
+
+    if (snapshot.exists()) {
+      // Get the existing data
+      const existingData = snapshot.val();
+
+      // Merge updated fields with existing data
+      const mergedData = { ...existingData, ...updatedTaskData };
+
+      // Parse dates
+      const startingDate = new Date(mergedData.startDate);
+      const dueDate = new Date(mergedData.deadline);
+
+      // Validate dates
+      if (isNaN(startingDate.getTime()) || isNaN(dueDate.getTime())) {
+        console.error("Invalid date format.");
+        return; // Prevent further execution
+      }
+
+      // Check if start date is after due date
+      if (startingDate > dueDate) {
+        showMessageToTheUser("Start date cannot be after due date.", true);
+        return; // Prevent further execution
+      }
+
+      if (startingDate <= dueDate) {
+        // Update the task data with merged data asynchronously
+        await set(taskRef, { ...mergedData, status: 'In Progress' });
+
+        console.log('Task status updated successfully');
+        showMessageToTheUser("Task status updated successfully");
+        document.getElementById('startTaskPopupConfirmation').style.visibility = 'hidden';
+        // Optionally provide user feedback here
+        console.log("Updated: " + taskRef);
+      }
+    } else {
+      console.error('Task does not exist');
+      // Handle the case where the task does not exist
+    }
+  } catch (error) {
+    console.error('Error updating task data:', error);
+    // Handle error if needed
+  }
 }
+
 function startTaskBtnClickHandler() {
   // Show confirmation popup
   document.getElementById('startTaskPopupConfirmation').style.visibility = 'visible';

@@ -6,7 +6,7 @@
     <title>Task Manager || Manage your Tasks</title>
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> -->
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2?v=4.7.0" as="font" type="font/woff2" crossorigin>
     <!-- Swiper css -->
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
 
@@ -198,8 +198,10 @@
                     <p>Are you sure you want to delete this task?</p>
                     <div class="cancelBtnArea"><button id="confirmDeleteBtn">Confirm</button></div>
                 </div>
+                <!-- Toast message container -->
+                <div class="toast-test" id="toastMessage"></div>  
                 <div class="bottom-widget">
-                    <h2>table nav - links</h2>
+                           
                 </div>
             </div>
             <div class="add-task-container" id="taskForm">
