@@ -47,7 +47,7 @@
                         <li class="selection" id="selection" style="--i:1">
                             <a href="#">
                                 <ion-icon name="trending-up-outline" class="icon"></ion-icon>
-                                <span class="selected-link">Edit Profile</span>
+                                <span class="selected-link">Profile</span>
                             </a> 
                         </li>
                         <li class="selection" id="selection" style="--i:3">
@@ -134,6 +134,33 @@
                         <div class="progress-bar"></div>
                     </div>
                 </div>
+                <!-- profile container -->
+                <div class="profile-card">
+                    <button id="loadUserDataBtn">ID: T54RYVV52WS</button>
+                    <form id="userForm">
+                        <div class="form-group">
+                            <label for="firstName"><ion-icon name="person"></ion-icon> First Name</label>
+                            <input type="text" id="firstName" placeholder="Enter your first name">
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName"><ion-icon name="person"></ion-icon> Last Name</label>
+                            <input type="text" id="lastName" placeholder="Enter your last name">
+                        </div>
+                        <div class="form-group">
+                            <label for="email"><ion-icon name="mail"></ion-icon> Email</label>
+                            <input type="email" id="email" placeholder="Enter your email">
+                        </div>
+                        <div class="form-group">
+                            <label for="oldPassword"><ion-icon name="lock-closed"></ion-icon> Old Password</label>
+                            <input type="password" id="oldPassword" placeholder="Enter your old password">
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword"><ion-icon name="lock-closed"></ion-icon> New Password</label>
+                            <input type="password" id="newPassword" placeholder="Enter your new password">
+                        </div>
+                        <button type="submit">Update</button>
+                    </form>
+                </div>                
             </div>
         </section>
         <section id = "home" class = "finishedTasks">
@@ -204,7 +231,7 @@
                     </div>
                 </div> 
                 <!-- Toast message container -->
-                <div class="toast-test" id="toastMessage"></div>  
+                <div class="toast-test" id="toastMessage"></div> 
                 <div class="bottom-widget">
                            
                 </div>

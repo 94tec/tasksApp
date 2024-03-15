@@ -661,6 +661,74 @@ header{
 .on-progress-nil{
     color : #d64b4b;
 }
+.profile-card {
+    /* visibility: hidden; */
+    position: absolute;
+    top: 10px;
+    right:0;
+    background-color: #fff;
+    width: 300px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    z-index: 999;
+}
+
+.profile-card button {
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.profile-card button:hover {
+    background-color: #0056b3;
+}
+
+.profile-card form {
+    text-align: left;
+}
+
+.profile-card .form-group {
+    margin-bottom: 15px;
+}
+
+.profile-card label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5px;
+}
+
+.profile-card input[type="text"],
+.profile-card input[type="email"],
+.profile-card input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.profile-card button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.profile-card button[type="submit"]:hover {
+    background-color: #218838;
+}
+
 @keyframes rotate {
     0%{
         transform: rotate(0deg);
@@ -953,8 +1021,7 @@ header{
     transform: translate(-50%, -50%) scale(0.1);
     width: 100%;
     border-radius: 8px;
-    background: var(--primaryBgColor);
-    color: #fff;
+    background-color: #f9f9f9;
     box-shadow: 0 0 15px rgba(243, 242, 242, 0.1);
     padding: 20px;
     visibility: hidden; 
@@ -985,7 +1052,10 @@ header{
 .add-task-container .h .close ion-icon{
     width: 100%;
     height: 100%;
-    color: #fff;
+    color: #0f0f0f;
+} 
+.add-task-container .h .close ion-icon:hover{
+    transform: scale(1.2);
 } 
 .add-task-container .form{
     margin-top: 30px;
