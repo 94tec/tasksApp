@@ -44,21 +44,39 @@
     </div>
     <div class="container" id="login_container">
         <div class="hide-btn"><ion-icon name="close-outline"></ion-icon></div>
-        <div class="form-container sign-up" >
+        <div class="form-container sign-up">
             <form id="signup-form">
                 <h2>Create Account</h2>
-                <input id="firstname" type="text" placeholder="Enter your First Name" required>
-                <input id="lastname" type="text" placeholder="Enter your Last Name" required>
-                <input id="email" type="text" placeholder="Enter your email" required>
-                <input id="password" type="password" placeholder="password" required>
+                <div class="input-container">
+                    <ion-icon name="person-outline" class="input-icon"></ion-icon>
+                    <input id="firstname" type="text" placeholder="Enter your First Name" required>
+                </div>
+                <div class="input-container">
+                    <ion-icon name="person-outline" class="input-icon"></ion-icon>
+                    <input id="lastname" type="text" placeholder="Enter your Last Name" required>
+                </div>
+                <div class="input-container">
+                    <ion-icon name="mail-outline" class="input-icon"></ion-icon>
+                    <input id="email" type="text" placeholder="Enter your email" required>
+                </div>
+                <div class="input-container">
+                    <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
+                    <input id="password" type="password" placeholder="password" required>
+                </div>
                 <button>Sign Up</button>
             </form>
         </div>
-        <div class="form-container sign-in" >
-            <form id = "loginForm">
+        <div class="form-container sign-in">
+            <form id="loginForm">
                 <h2>Login || Enter your Credentials</h2>
-                <input id = "login_email" type="text" placeholder="Enter your email">
-                <input id = "login_password" type="password" placeholder="password">
+                <div class="input-container">
+                    <ion-icon name="mail-outline" class="input-icon"></ion-icon>
+                    <input id="login_email" type="text" placeholder="Enter your email">
+                </div>
+                <div class="input-container">
+                    <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
+                    <input id="login_password" type="password" placeholder="password">
+                </div>
                 <button>Sign In</button>
             </form>
         </div>
