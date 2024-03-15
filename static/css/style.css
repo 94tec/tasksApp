@@ -843,6 +843,7 @@ header{
     border-bottom: 2px solid #fff;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 }
 
 /* Set flex basis for each column */
@@ -915,6 +916,21 @@ header{
 #onhold-tasks{
     color:  #17a2b8;
 }
+.clickable-message{
+    position: absolute;
+    top: 50%;
+    left: 2px;
+    transform: translateY(-50%);
+    background: #fff;
+    border-radius: 0.65rem;
+    padding: 8px 15px;
+    color: rgb(39, 165, 77);
+    outline:none;
+    border:none;
+    cursor: pointer;
+    z-index: 2999;
+}
+  
 /* scroll bar */
 ::-webkit-scrollbar{
     width: 6px;
@@ -1251,6 +1267,69 @@ header{
     border-radius: 0.65rem;
     cursor: pointer;
 }
+#click-to-popup-task-data{
+    display: none;
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translate(-50%);
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    width: 300px;
+   
+}
+#click-to-popup-task-data .hidePopupBtn{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#click-to-popup-task-data .hidePopupBtn ion-icon{
+    font-size: 25px;
+}
+#click-to-popup-task-data .hidePopupBtn ion-icon:hover{
+    transform: scale(1.2);
+}
+#click-to-popup-task-data p{
+    text-align: center;
+    font-family: 'Montserrat';
+}
+#click-to-popup-task-data .btns{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    column-gap: 30px;
+}
+#click-to-popup-task-data .btns button{
+   padding: 6px 12px;
+   background: var(--btn-color);
+   border: none;
+   outline: none;
+   border-radius: 0.4rem;
+}
+.tasks-display-container {
+    display: none; 
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+  }
 .footer-pane{
     position: relative;
     top: 80px;
