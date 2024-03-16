@@ -4,7 +4,7 @@ window.addEventListener('load', () => {
 
 const list = document.querySelectorAll('.list');
 function activeLink () {
-    list.forEach((item) => 
+    list.forEach((item) =>
     item.classList.remove('active'));
     this.classList.add('active');
 }
@@ -27,7 +27,7 @@ loginBtn.addEventListener('click', ()=>{
 const hideContainer= document.querySelector('.hide-btn');
 const loginButton= document.getElementById('loginBtn');
 const getStartedBtn = document.getElementById('get_started_btn');
-const showLoginContainer = (event) => { 
+const showLoginContainer = (event) => {
     event.preventDefault();
     container.classList.add('showContainer');
 }
@@ -38,11 +38,10 @@ hideContainer.addEventListener('click', () =>{
     container.classList.remove('showContainer');
 });
 // firebase Set up
-import { 
-    getAuth, 
+import {
+    getAuth,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
-    onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getDatabase, set, ref,
@@ -50,9 +49,10 @@ import { getDatabase, set, ref,
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+import config from './config.js';
 const firebaseConfig = {
-    apiKey: "AIzaSyCNtW0n-Hefvxlhq1VeqhDvmhWQQIChSls",
-    authDomain: "taskmanager-346df.firebaseapp.com",
+    apiKey: config.apiKey,
+    authDomain: config.apiSecret,
     projectId: "taskmanager-346df",
     storageBucket: "taskmanager-346df.appspot.com",
     messagingSenderId: "593036447381",
@@ -69,38 +69,45 @@ const firebaseConfig = {
 const signupForm = document.getElementById('signup-form');
 signupForm.addEventListener('submit', (e)=>{
     e.preventDefault();
-    const firstName = signupForm['firstname'].value
-    const lastName = signupForm['lastname'].value
+    const firstName = signupForm['firstname'].value;
+    const middleName = signupForm['middlename'].value;
+    const lastName = signupForm['lastname'].value;
     const email = signupForm['email'].value;
     const password = signupForm['password'].value;
-    
+
     createUserWithEmailAndPassword(auth, email, password)
     .then(cred =>{
         const user = cred.user;
         console.log(user);
         set(ref(db, 'users/' + user.uid), {
             firstname: firstName,
+            middlename: middleName,
             lastname: lastName,
-            email: email
+            email: email,
+            password: password,
         })
         alert("User Created Successful");
         signupForm.reset();
+        toggleFunction();
     })
     .catch((error) => {
         alert("Failed to create User contact your Adminstrator");
         console.log(error.code);
         console.log(error.message);
     })
-    
 })
-
+// toggle function
+function toggleFunction (){
+    const container = document.querySelector('.container.active .sign-in');
+    container.style. transform = 'translateX(100%)';
+}
 //login
 const loginForm = document.getElementById('loginForm');
 loginForm.addEventListener('submit', (e)=>{
     e.preventDefault();
     const email = loginForm['login_email'].value;
     const password = loginForm['login_password'].value;
-    
+
     signInWithEmailAndPassword(auth, email, password)
     .then(cred =>{
         console.log(cred.user);
@@ -123,8 +130,7 @@ loginForm.addEventListener('submit', (e)=>{
         console.log(error.code);
         console.log(error.message);
     })
-    
+
 })
 
 
- 

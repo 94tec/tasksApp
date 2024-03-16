@@ -255,6 +255,7 @@ header{
     align-items: center;
 }
 .dashboard .top-widget .tasks-status-container .salutation h4{
+    width: auto;
     height: 100%;
     display: flex;
     align-items: center;
@@ -349,12 +350,12 @@ header{
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    color: #21b94f;
+    color: #94c0bc;
 }
 .dashboard .slide-widget .card-content .cards .count-down-header{
     font-size: 1.8rem;
     font-family: "Montserrat";
-    color: var(--btn-color);
+    color: #94c0bc;
 }
 .dashboard .slide-widget .card-content .cards .deadline-count-down{
     width: 100%;
@@ -454,13 +455,14 @@ header{
 .dashboard .slide-widget .card-content .cards .card-title h4{
     font-family: 'Montserrat';
     font-size: 1.5rem;
-    color: #fff;
+    color: #94c0bc;
 }
 .dashboard .slide-widget .card-content .cards .card-description{
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: #94c0bc;
     font-size: 1rem;
     padding: 0 20px;
 }
@@ -474,7 +476,7 @@ header{
 }
 .dashboard .slide-widget .card-content .cards .card-action .input{
     background: var(--btn-color);
-    color: #000;
+    color: #94c0bc;
     border: transparent;
     padding: 8px 24px;
     border-radius: 0.5rem;
@@ -549,7 +551,7 @@ header{
     padding: 10px;
     margin-bottom: 20px;
     box-shadow: 0 2px 0  rgba(173, 167, 167, 0.6);
-    color: #fff;
+    color: #b8ece8;
     cursor: pointer;
    
 }
@@ -604,8 +606,9 @@ header{
 .dashboard .aside-widget .box span .timeline .timeline-column .timeline-box .timeline-content .content:hover,
 .task:hover
 {
-    background: #313030;
-    border: 2px solid #313030;
+    background-color: #f9f9f9;
+    border: 2px solid #f9f9f9;
+    color: #000;
 }
 .dashboard .aside-widget .box span .timeline .timeline-column .timeline-box .timeline-content .content::before,
 .task::before
@@ -636,15 +639,19 @@ header{
 .dashboard .aside-widget .box span .timeline .timeline-column .timeline-box .timeline-content p{
     font-size: 16px;
     font-weight: 500;
+    
 }
 .task-title {
-    color: #9741cc;
+    color: #94c0bc;
+    font-family: 'Montserrat';
+    text-transform: Capitalize;
 }
 
 .task-description {    
     font-size: 16px;
     margin-bottom: 16px;
     text-align: center;
+    color: #8bcec8;
 }
 .status{
     position: absolute;
@@ -657,12 +664,13 @@ header{
     position: absolute;
     bottom: 3px;
     left: 3px;
+    color: #37e078;
 }
 .on-progress-nil{
     color : #d64b4b;
 }
 .profile-card {
-    /* visibility: hidden; */
+    display: none;
     position: absolute;
     top: 10px;
     right:0;
@@ -674,20 +682,37 @@ header{
     text-align: center;
     z-index: 999;
 }
-
+.profile-card #hideProfileBtn{
+    position: absolute;
+    top: 0px;
+    right: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+.profile-card #hideProfileBtn ion-icon{
+    font-size: 25px;
+  }
+.profile-card #hideProfileBtn ion-icon:hover{
+    transform: scale(1.2);
+  }
 .profile-card button {
+    width: 100%;
     margin-bottom: 20px;
     padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
+    background: transparent;
+    color: #adddda;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.4s;
 }
 
 .profile-card button:hover {
-    background-color: #0056b3;
+    background-color: #8eaaa8;
+    color: #fff;
 }
 
 .profile-card form {

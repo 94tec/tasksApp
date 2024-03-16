@@ -69,7 +69,7 @@
                 <div class="top-widget">
                     <div class="tasks-status-container">
                         <div class="salutation">
-                            <h4>Hello, <span id = "userFirstName"></span><span id = "userLastName"></span></h4>
+                            <h4>Hello, <span id = "userFirstName"><span id="userMiddleName"></span></span><span id = "userLastName"></span></h4>
                         </div>
                         <div class="statusList">
                             <div class=" tasks total-tasks">
@@ -135,12 +135,17 @@
                     </div>
                 </div>
                 <!-- profile container -->
-                <div class="profile-card">
-                    <button id="loadUserDataBtn">ID: T54RYVV52WS</button>
+                <div class="profile-card" id="profileContainer">
+                    <div id="hideProfileBtn"><ion-icon name="close-outline"></ion-icon></div>
+                    <button id="loadUserDataId"></button>
                     <form id="userForm">
                         <div class="form-group">
                             <label for="firstName"><ion-icon name="person"></ion-icon> First Name</label>
                             <input type="text" id="firstName" placeholder="Enter your first name">
+                        </div>
+                        <div class="form-group">
+                            <label for="firstName"><ion-icon name="person"></ion-icon>Middle Name</label>
+                            <input type="text" id="middleName" placeholder="Enter your Middle name">
                         </div>
                         <div class="form-group">
                             <label for="lastName"><ion-icon name="person"></ion-icon> Last Name</label>

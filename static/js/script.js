@@ -101,7 +101,7 @@ for(selects of statusOption) {
 }
 
 import {
-    getAuth, onAuthStateChanged, signOut
+    getAuth, onAuthStateChanged, signOut,signInWithEmailAndPassword
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getDatabase, push, ref,remove,set,update,
@@ -166,17 +166,18 @@ const firebaseConfig = {
         get(databaseRef).then((snapshot) => {
           if (snapshot.exists()) {
             const userData = snapshot.val();
-            console.log("User data:", userData);
             const firstName = userData.firstname;
+            const middleName = userData.middlename;
             const lastName = userData.lastname;
-            console.log(firstName, lastName);
 
-            //elements in your HTML with IDs "firstName" and "lastName"
+            //elements in your HTML with IDs "firstName","middleName" and "lastName"
             const firstNameElement = document.getElementById("userFirstName");
+            const middleNameElement = document.getElementById("userMiddleName");
             const lastNameElement = document.getElementById("userLastName");
 
-            // Set the text content of the elements to the fetched first name and last name
+            // Set the text content of the elements to the fetched name
             firstNameElement.textContent = firstName;
+            middleNameElement.textContent = middleName;
             lastNameElement.textContent = lastName;
           } else {
             console.log("No data available for this user");
@@ -530,9 +531,17 @@ const firebaseConfig = {
 
           // Perform actions based on the selected link
           switch (selectedLinkText) {
-              case 'Edit Profile':
+              case 'Profile':
                   // Handle Edit Profile action
                   console.log('Edit Profile selected.');
+                  const profileContainer = document.getElementById('profileContainer');
+                  const hideProfileForm = document.getElementById('hideProfileBtn');
+                  profileContainer.style.display = 'block';
+                  hideProfileForm.addEventListener('click', function(e){
+                    e.preventDefault();
+                    profileContainer.style.display = 'none';
+                  })
+                  loadUserDataHandler()
                   break;
               case 'Settings':
                   // Handle Settings action
@@ -559,6 +568,107 @@ const firebaseConfig = {
           }
       });
   });
+// Function to update password after reauthentication
+function updatePassword(newPassword, currentPassword) {
+  const user = auth.currentUser;
+
+  // Reauthenticate user with current email and password
+  signInWithEmailAndPassword(auth, user.email, currentPassword)
+      .then((userCredential) => {
+          // Password successfully reauthenticated
+          // Update password
+          updatePassword(userCredential, newPassword)
+              .then(() => {
+                  // Password updated successfully
+                  console.log("Password updated successfully.");
+                  alert("Password updated successfully.");
+              })
+              .catch((error) => {
+                  // An error occurred while updating the password
+                  console.error("Error updating password:", error);
+                  alert("Failed to update password. Please try again.");
+              });
+      })
+      .catch((error) => {
+          // Reauthentication failed
+          console.error("Reauthentication failed:", error);
+          alert("Reauthentication failed. Please check your current password.");
+      });
+}
+// Function to load user data into the form
+function loadUserDataHandler() {
+  const user = auth.currentUser;
+  const userId = user.uid;
+  const databaseRef = ref(db, 'users/' + userId);
+
+  get(databaseRef)
+      .then((snapshot) => {
+          if (snapshot.exists()) {
+              const userData = snapshot.val();
+              console.log(userData);
+
+              // Populate form fields with user data
+              document.getElementById('loadUserDataId').textContent = userId;
+              document.getElementById('firstName').value = userData.firstname || '';
+              document.getElementById('middleName').value = userData.middlename || '';
+              document.getElementById('lastName').value = userData.lastname || '';
+              document.getElementById('email').value = userData.email || '';
+              // Assuming user data includes old password, update if needed
+              document.getElementById('oldPassword').value = userData.password || '';
+          } else {
+              console.log("No data available for this user");
+          }
+      })
+      .catch((error) => {
+          console.error("Error fetching user data:", error);
+      });
+}
+
+// Event listener for form submission
+const submitUpdatedUserData = document.getElementById('userForm');
+submitUpdatedUserData.addEventListener('submit', updateUserDataHandler);
+
+// Function to handle form submission for updating user data
+function updateUserDataHandler(event) {
+  event.preventDefault();
+
+  const user = auth.currentUser;
+  const userId = user.uid;
+
+  const firstName = document.getElementById('firstName').value;
+  const middleName = document.getElementById('middleName').value;
+  const lastName = document.getElementById('lastName').value;
+  const email = document.getElementById('email').value;
+  const oldPassword = document.getElementById('oldPassword').value;
+
+  // Call updatePassword function to update the password
+  updatePassword(newPassword);
+
+  // Update user data in the database
+  const userRef = ref(db, 'users/' + userId);
+
+  set(userRef, {
+      firstname: firstName,
+      middlename: middleName,
+      lastname: lastName,
+      email: email,
+      newPassword: newPassword // Optionally, update newPassword in the database as well
+  })
+  .then(() => {
+      console.log('User data updated successfully.');
+      // Optionally, clear the form fields after successful update
+      document.getElementById('firstName').value = '';
+      document.getElementById('middleName').value = '';
+      document.getElementById('lastName').value = '';
+      document.getElementById('email').value = '';
+      document.getElementById('oldPassword').value = '';
+      document.getElementById('newPassword').value = '';
+  })
+  .catch((error) => {
+      console.error('Error updating user data:', error);
+  });
+}
+
 
   // Showing add new task form
   const addNewForm =  document.getElementById('new-task-form-btn');
