@@ -1373,10 +1373,15 @@ header{
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
-    width: 300px;
+    width: 550px;
    
 }
-#click-to-popup-task-data .hidePopupBtn{
+#click-to-popup-task-data #task-data{
+    width: 100%;
+    height: 100%;
+   
+}
+#click-to-popup-task-data #task-data #hidePopupBtn{
     position: absolute;
     top: 0;
     right: 0;
@@ -1386,17 +1391,17 @@ header{
     align-items: center;
     justify-content: center;
 }
-#click-to-popup-task-data .hidePopupBtn ion-icon{
+#click-to-popup-task-data #task-data #hidePopupBtn ion-icon{
     font-size: 25px;
 }
-#click-to-popup-task-data .hidePopupBtn ion-icon:hover{
+#click-to-popup-task-data #task-data #hidePopupBtn ion-icon:hover{
     transform: scale(1.2);
 }
-#click-to-popup-task-data p{
+#click-to-popup-task-data #task-data p{
     text-align: center;
     font-family: 'Montserrat';
 }
-#click-to-popup-task-data .btns{
+#click-to-popup-task-data #task-data .btns{
     width: 100%;
     display: flex;
     align-items: center;
@@ -1404,7 +1409,7 @@ header{
     margin-top: 10px;
     column-gap: 30px;
 }
-#click-to-popup-task-data .btns button{
+#click-to-popup-task-data #task-data .btns button{
    padding: 6px 12px;
    background: var(--btn-color);
    border: none;

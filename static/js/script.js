@@ -12,7 +12,7 @@ listItems.forEach(item => {
 function showMessageToTheUser(message, isError = false) {
   const toastElement = document.getElementById('toastMessage');
   toastElement.textContent = message;
-  
+
   if (isError) {
       toastElement.style.backgroundColor = '#ff6347'; // Red color for error messages
   } else {
@@ -104,8 +104,8 @@ import {
     getAuth, onAuthStateChanged, signOut,signInWithEmailAndPassword
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getDatabase, push, ref,remove,set,update,
-    get, child, query, orderByChild, equalTo
+import { getDatabase, push, ref,remove,set,
+    get, child, query, orderByChild, equalTo, startAt, endAt
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 // import config from "./config";
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -186,7 +186,33 @@ const firebaseConfig = {
           console.error("Error fetching user data:", error);
         });
 
-        
+        const queryStatusToExclude = 'completed';
+
+        // Query to filter tasks excluding those with status 'completed'
+        const tasksQuery = query(
+          userTasksRef,
+          orderByChild('status'), startAt(''), endAt('completed')
+        );
+
+        console.log(tasksQuery.toString()); // Log the query to see if it's constructed correctly
+        get(tasksQuery)
+        .then((snapshot) => {
+          const tasks = snapshot.val();
+          // Manually filter out tasks with status 'completed'
+          const filteredTasks = {};
+          snapshot.forEach((childSnapshot) => {
+            const task = childSnapshot.val();
+            if (task.status !== 'completed') {
+              filteredTasks[childSnapshot.key] = task;
+            }
+          });
+          console.log(filteredTasks);
+          // Process the tasks as needed
+        })
+        .catch((error) => {
+          console.error('Error retrieving tasks:', error);
+        });
+
         // // Reference to the tasks node for the user
        const pendingStatus = 'Pending'; // Corrected to match the status in the database
 
@@ -252,72 +278,82 @@ const firebaseConfig = {
            console.error("Error retrieving ongoing tasks: ", error);
       });
       // Fetch tasks to display in the slide widget
-      get(userTasksRef)
+      // Query to filter tasks excluding those with status 'completed'
+      const activeTasksQuery = query(
+        userTasksRef,
+        orderByChild('status'), startAt(''), endAt('completed')
+      );
+      get(activeTasksQuery)
       .then((snapshot) => {
         const slideContainer = document.getElementById('slide');
         let slidesHTML = ''; // Initialize a string to store HTML of all slides
 
         // Loop through the snapshot to generate slide HTML
         if(snapshot.exists()){
+          const filteredTasks = {};
           snapshot.forEach((childSnapshot) => {
           const task = childSnapshot.val();
-          // Calculate time lapse
-          const startDate = new Date(task.startDate);
-          const deadline = new Date(task.deadline);
-          const timeLapse = getTimeLapse(startDate, deadline);
+          if (task.status !== 'completed') {
+            filteredTasks[childSnapshot.key] = task;
+            
+            // Calculate time lapse
+            const startDate = new Date(task.startDate);
+            const deadline = new Date(task.deadline);
+            const timeLapse = getTimeLapse(startDate, deadline);
 
-          // Process each task here
-          slidesHTML += `
-            <div class="swiper-slide">
-              <div class="cards">
-                <div class = "taskDates">
-                  <p>Start Date: ${startDate.toLocaleString().substring(0, startDate.toLocaleString().length - 6)}</p>
-                  <p>Deadline: ${deadline.toLocaleString().substring(0, deadline.toLocaleString().length - 6)}</p>
-                </div>
-                <!-- Display time lapse -->
-                <p class = "count-down-header"> Task Time Lapse</p>
-                <div class="deadline-count-down">
-                  <!-- Your countdown timer HTML here -->
-                  <div id="time">
-                    <div class="circle" style="--clr: #7f11c4;">
+            // Process each task here
+            slidesHTML += `
+              <div class="swiper-slide">
+                <div class="cards">
+                  <div class = "taskDates">
+                    <p>Start Date: ${startDate.toLocaleString().substring(0, startDate.toLocaleString().length - 6)}</p>
+                    <p>Deadline: ${deadline.toLocaleString().substring(0, deadline.toLocaleString().length - 6)}</p>
+                  </div>
+                  <!-- Display time lapse -->
+                  <p class = "count-down-header"> Task Time Lapse</p>
+                  <div class="deadline-count-down">
+                    <!-- Your countdown timer HTML here -->
+                    <div id="time">
+                      <div class="circle" style="--clr: #7f11c4;">
+                          <svg>
+                              <circle cx = "45" cy = "45" r = "45" id = "dd"></circle>
+                          </svg>
+                          <div id="days">${timeLapse.days}<br> <span>Days</span></div>
+                      </div>
+                      <div class="circle" style="--clr: #61d81c;">
                         <svg>
-                            <circle cx = "45" cy = "45" r = "45" id = "dd"></circle>
+                          <circle  cx = "45" cy = "45" r = "45" id = "hh"></circle>
                         </svg>
-                        <div id="days">${timeLapse.days}<br> <span>Days</span></div>
-                    </div>
-                    <div class="circle" style="--clr: #61d81c;">
-                      <svg>
-                        <circle  cx = "45" cy = "45" r = "45" id = "hh"></circle>
-                      </svg>
-                      <div id="hours">${timeLapse.hours} <br> <span>Hours</span></div>
-                    </div>
-                    <div class="circle" style="--clr: #0ef;">
-                      <svg>
-                        <circle  cx = "45" cy = "45" r = "45" id = "mm"></circle>
-                      </svg>
-                      <div id="minutes">${timeLapse.minutes}<br> <span>Minutes</span></div>
-                    </div>
-                    <div class="circle" style="--clr: #2987a3;">
-                      <svg>
-                        <circle  cx = "45" cy = "45" r = "45" id = "ss"></circle>
-                      </svg>
-                      <div id="seconds">${timeLapse.seconds} <br> <span>Seconds</span></div>
+                        <div id="hours">${timeLapse.hours} <br> <span>Hours</span></div>
+                      </div>
+                      <div class="circle" style="--clr: #0ef;">
+                        <svg>
+                          <circle  cx = "45" cy = "45" r = "45" id = "mm"></circle>
+                        </svg>
+                        <div id="minutes">${timeLapse.minutes}<br> <span>Minutes</span></div>
+                      </div>
+                      <div class="circle" style="--clr: #2987a3;">
+                        <svg>
+                          <circle  cx = "45" cy = "45" r = "45" id = "ss"></circle>
+                        </svg>
+                        <div id="seconds">${timeLapse.seconds} <br> <span>Seconds</span></div>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="card-title">
-                  <h4 class="id">${childSnapshot.key}</h4>
-                  <h4 class="task-title">${task.taskTitle}</h4>
-                </div>
-                <div class="card-description">
-                  <p>${task.taskDescription}</p>
-                </div>
-                <div class="card-action">
-                  <p>${task.status}</p>
-                  <input type="button" value="view" class="input">
-                </div>
-                </div>
-              </div>`;
+                  <div class="card-title">
+                    <h4 class="id">${childSnapshot.key}</h4>
+                    <h4 class="task-title">${task.taskTitle}</h4>
+                  </div>
+                  <div class="card-description">
+                    <p>${task.taskDescription}</p>
+                  </div>
+                  <div class="card-action">
+                    <p>${task.status}</p>
+                    <input type="button" value="view" class="input">
+                  </div>
+                  </div>
+                </div>`;
+          }
           });
           document.addEventListener('DOMContentLoaded', () => {
             // Animate the dashoffset for each circle element
@@ -432,7 +468,12 @@ const firebaseConfig = {
 
       }
        // Fetch all tasks and display in the browser table
-       get(userTasksRef).then((snapshot) => {
+       const tasksQueryStatus = query(
+        userTasksRef,
+        orderByChild('status'), startAt(''), endAt('completed')
+      );
+       get(tasksQueryStatus)
+       .then((snapshot) => {
           const totalTasks = snapshot.size;
           const usertotalTasks = document.getElementById('totalTasks');
           usertotalTasks.textContent = totalTasks.toString();
@@ -441,66 +482,84 @@ const firebaseConfig = {
           taskTableBody.innerHTML = ''; // Clear previous data
           let index = 1;
           if(snapshot.exists()){
+            const filteredTasks = {};
             snapshot.forEach((childSnapshot) => {
               const task = childSnapshot.val();
-              const taskKey = childSnapshot.key;
-              // Calculate time lapse
-              const startDate = new Date(task.startDate);
-              const deadline = new Date(task.deadline);
-              // Process each task here
-              const row = document.createElement('tr');
-              row.innerHTML = `
-                <td>${index}</td>
-                <td>${childSnapshot.key}</td>
-                <td>${task.taskTitle}</td>
-                <td>${task.taskDescription}</td>
-                <td>${task.priority}</td>
-                <td>${startDate.toLocaleString().substring(0, startDate.toLocaleString().length - 6)}</td>
-                <td>${deadline.toLocaleString().substring(0, deadline.toLocaleString().length - 6)}</td>
-                <td class = "task-status">${task.status}</td>
-                <td class = "action-column">
-                  <div><ion-icon name="trash-outline" id = "deleteTaskBtn"  data-task-key="${taskKey}"></ion-icon>
-                    <ion-icon name="create-outline" id = "editTaskBtn"  data-task-key="${taskKey}"></ion-icon>
-                    <ion-icon name="eye-outline" id = "startTaskBtn"  data-task-key="${taskKey}"></ion-icon>
-                  </div>
-                </td>
-              `;
-              row.setAttribute('data-task-key', childSnapshot.key);
-              row.querySelectorAll('td').forEach(td => {
-                td.style.width = '100%';
-              });
-              taskTableBody.appendChild(row);
-               // Add event listeners for row hover
-              row.addEventListener('mouseenter', function() {
-                // Change background color on hover
-                row.style.backgroundColor = 'black';
-              });   
-              row.addEventListener('mouseleave', function() {
-                  // Restore original background color
-                  row.style.backgroundColor = 'transparent';
-                });
-              // Add event listener for row click to show popup form
-              row.addEventListener('click', function(event) {
-                // Check if the clicked element is not part of the action column
-                if (!event.target.closest('.action-column')) {
-                    // Show the popup form
-                    showPopupForm();
-                }
-            });
-            
-              // Check if the task status is "In Progress" and set the icon accordingly
-              if (task.status === 'In Progress' && task.icon) {
-                const startBtn = row.querySelector(`#startTaskBtn[data-task-key="${taskKey}"]`);
-                if (startBtn) {
-                    startBtn.setAttribute('name', task.icon);
-                    startBtn.addEventListener('click', function() {
-                      displayPopupMessage(taskKey);
+              if (task.status !== 'completed') {
+                filteredTasks[childSnapshot.key] = task;
+              
+                  const taskKey = childSnapshot.key;
+                  // Calculate time lapse
+                  const startDate = new Date(task.startDate);
+                  const deadline = new Date(task.deadline);
+                  // Process each task here
+                  const row = document.createElement('tr');
+                  row.innerHTML = `
+                    <td>${index}</td>
+                    <td>${childSnapshot.key}</td>
+                    <td>${task.taskTitle}</td>
+                    <td>${task.taskDescription}</td>
+                    <td>${task.priority}</td>
+                    <td>${startDate.toLocaleString().substring(0, startDate.toLocaleString().length - 6)}</td>
+                    <td>${deadline.toLocaleString().substring(0, deadline.toLocaleString().length - 6)}</td>
+                    <td class = "task-status">${task.status}</td>
+                    <td class = "action-column">
+                      <div><ion-icon name="trash-outline" id = "deleteTaskBtn"  data-task-key="${taskKey}"></ion-icon>
+                        <ion-icon name="create-outline" id = "editTaskBtn"  data-task-key="${taskKey}"></ion-icon>
+                        <ion-icon name="eye-outline" id = "startTaskBtn"  data-task-key="${taskKey}"></ion-icon>
+                      </div>
+                    </td>
+                  `;
+              
+                  row.setAttribute('data-task-key', childSnapshot.key);
+                  row.querySelectorAll('td').forEach(td => {
+                    td.style.width = '100%';
                   });
+                  taskTableBody.appendChild(row);
+                  // Add event listeners for row hover
+                  row.addEventListener('mouseenter', function() {
+                    // Change background color on hover
+                    row.style.backgroundColor = 'black';
+                  });
+                  row.addEventListener('mouseleave', function() {
+                      // Restore original background color
+                      row.style.backgroundColor = 'transparent';
+                    });
+                  // Add event listener for row click to show popup form
+                  row.addEventListener('click', function(event) {
+                    // Check if the clicked element is not part of the action column
+                    if (!event.target.closest('.action-column')) {
+                        // Retrieve the task data from the database
+                        const taskRef = child(tasksRef, taskKey);
+                        get(taskRef).then((snapshot) => {
+                            const taskDetails = snapshot.val();
+                            const taskKey = snapshot.key;
+                            // Call the function to display the edit form with the task data
+                            console.log(taskDetails);
+                            displayTaskDetails(taskDetails, taskKey);
+                        }).catch((error) => {
+                            console.error('Error getting task data:', error);
+                        });
+                        // Show the popup form
+                        showPopupForm();
+
+                    }
+                  });
+
+                  // Check if the task status is "In Progress" and set the icon accordingly
+                  if (task.status === 'In Progress' && task.icon) {
+                    const startBtn = row.querySelector(`#startTaskBtn[data-task-key="${taskKey}"]`);
+                    if (startBtn) {
+                        startBtn.setAttribute('name', task.icon);
+                        startBtn.addEventListener('click', function() {
+                          console.log("Popup message displayed for task key:", taskKey);
+                      });
+                    }
                 }
-            }
-              index++;
+                  index++;
+              }
             });
-          }else{
+            }else{
              // If there are no tasks
               const row = document.createElement('tr');
               row.innerHTML = '<td colspan="8">No tasks available</td>'; // Colspan to span across all columns
@@ -797,12 +856,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
             });
 
-  // Event listener for the cancel button
-  document.getElementById('cancelDeleteBtn').addEventListener('click', function(e) {
-      // Hide the confirmation form
-      e.preventDefault();
-      confirmationForm.style.display = 'none';
-  });
+            // Event listener for the cancel button
+            document.getElementById('cancelDeleteBtn').addEventListener('click', function(e) {
+                // Hide the confirmation form
+                e.preventDefault();
+                confirmationForm.style.display = 'none';
+            });
           }else if(event.target && event.target.id === 'editTaskBtn') {
               console.log('Edit button clicked');
               // Get the task key from the parent row
@@ -1021,58 +1080,54 @@ function startTaskBtnClickHandler() {
     // Hide the popup if cancel is clicked
     document.getElementById('startTaskPopupConfirmation').style.visibility = 'hidden';
   });
-  
-}
-// Function to display the popup message
-function displayPopupMessage(taskKey) {
-  // Implement the logic to display the popup message using the taskKey
-  console.log("Popup message displayed for task key:", taskKey);
+
 }
 function showPopupForm() {
   document.getElementById('click-to-popup-task-data').style.display = 'block';
-  const hidePopupForm = document.querySelector('.hidePopupBtn');
+  const hidePopupForm = document.querySelector('#hidePopupBtn');
   hidePopupForm.addEventListener('click', function(e){
     e.preventDefault();
     document.getElementById('click-to-popup-task-data').style.display = 'none';
   })
 }
 // Function to display the edit form with the task data
-function displayTaskDetails(taskData, taskKey) {
-  const editFormContainer = document.querySelector('.edit-form-container');
+function displayTaskDetails(taskDetails, taskKey) {
+  const editFormContainer = document.querySelector('#click-to-popup-task-data');
   const taskIdInput = editFormContainer.querySelector('#task-Id');
   const taskNameInput = editFormContainer.querySelector('#task-name');
   const taskDescriptionInput = editFormContainer.querySelector('#task-description');
   const taskStartTimeInput = editFormContainer.querySelector('#task-start-time');
   const taskDueTimeInput = editFormContainer.querySelector('#task-due-time');
+  const taskPriorityInput = editFormContainer.querySelector('#task-priority');
+  const taskStatusInput = editFormContainer.querySelector('#task-status');
 
   taskIdInput.value = taskKey;
-  taskNameInput.value = taskData.taskTitle;
-  taskDescriptionInput.value = taskData.taskDescription;
-  taskStartTimeInput.value = taskData.startDate;
-  taskDueTimeInput.value = taskData.deadline;
+  taskNameInput.value = taskDetails.taskTitle;
+  taskDescriptionInput.value = taskDetails.taskDescription;
+  taskStartTimeInput.value = taskDetails.startDate;
+  taskDueTimeInput.value = taskDetails.deadline;
+  taskPriorityInput.value = taskDetails.priority;
+  taskStatusInput.value = taskDetails.status;
 
   taskIdInput.disabled = true;
   taskStartTimeInput.disabled = true;
   taskDueTimeInput.disabled = true;
+  taskNameInput.disabled = true;
+  taskDescriptionInput.disabled = true;
+  taskPriorityInput.disabled = true;
+  taskStatusInput.disabled = true;
 
   editFormContainer.style.display = 'block';
 
-  const editForm = editFormContainer.querySelector('form');
-  editForm.addEventListener('submit', function(event) {
+  const taskDeatails = editFormContainer.querySelector('#task-data');
+  taskDeatails.addEventListener('submit', function(event) {
       event.preventDefault();
       const updatedTaskData = {
-          taskTitle: taskNameInput.value,
-          taskDescription: taskDescriptionInput.value,
-          startDate: taskStartTimeInput.value,
-          deadline: taskDueTimeInput.value
+          deadline: taskDueTimeInput.value,
+          status: taskStatusInput.value
           // Add other properties as needed
       };
       endTaskHandler(taskKey, updatedTaskData)
-  });
-
-  const closeButton = editFormContainer.querySelector('#closeBtn');
-  closeButton.addEventListener('click', function() {
-      editFormContainer.style.display = 'none';
   });
 }
 async function endTaskHandler(taskKey, updatedTaskData) {
@@ -1087,16 +1142,26 @@ async function endTaskHandler(taskKey, updatedTaskData) {
       // Get the existing data
       const existingData = snapshot.val();
 
+      // Update the due time to current date and time (Date.now())
+      updatedTaskData.dueTime = Date.now();
+
+      // Set the status to "completed"
+      updatedTaskData.status = "completed";
+
       // Merge updated fields with existing data
-      const mergedData = { ...existingData, ...updatedTaskData };
+      const mergedData = {
+          ...existingData, ...updatedTaskData,
+          deadline: Date.now(),
+          status: "completed"
+        };
 
       // Update the task data with merged data asynchronously
       await set(taskRef, mergedData);
 
       console.log('Task data updated successfully');
-      showMessageToTheUser('Task data updated successfully');
+      showMessageToTheUser(`Task ID ${taskKey} Completed successfully`);
       // Optionally provide user feedback here
-      document.getElementById('startTaskPopupConfirmation').style.visibility = 'hidden';
+      document.getElementById('click-to-popup-task-data').style.display = 'none';
       location.reload();
     } else {
       console.error('Task does not exist');
@@ -1107,6 +1172,8 @@ async function endTaskHandler(taskKey, updatedTaskData) {
     // Handle error if needed
   }
 }
+
+
 
 
 
