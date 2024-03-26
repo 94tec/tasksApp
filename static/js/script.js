@@ -186,8 +186,6 @@ const firebaseConfig = {
           console.error("Error fetching user data:", error);
         });
 
-        const queryStatusToExclude = 'completed';
-
         // Query to filter tasks excluding those with status 'completed'
         const tasksQuery = query(
           userTasksRef,
@@ -214,6 +212,20 @@ const firebaseConfig = {
         });
 
         // // Reference to the tasks node for the user
+        const completedStatus = 'completed'; // Corrected to match the status in the database
+
+        // Query to filter tasks where status is "On Progress"
+        const completedTasksQuery = query(userTasksRef, orderByChild('status'), equalTo(completedStatus));
+ 
+        // Retrieve data based on the query
+        get(completedTasksQuery).then((snapshot) => {
+           const totalTasks = snapshot.size;
+           const userCompletedTasks = document.getElementById('completedTasks');
+           userCompletedTasks.textContent = totalTasks.toString();
+           console.log("pending tasks", totalTasks)
+        }).catch((error) => {
+            console.error("Error retrieving ongoing tasks: ", error);
+       });
        const pendingStatus = 'Pending'; // Corrected to match the status in the database
 
        // Query to filter tasks where status is "On Progress"
@@ -577,8 +589,8 @@ const firebaseConfig = {
          console.log("User is signed out");
        }
     });
-    // Get all elements with class "selection"
-    const selectionElements = document.querySelectorAll('.selection');
+  // Get all elements with class "selection"
+  const selectionElements = document.querySelectorAll('.selection');
   // Add click event listener to each selection element
   selectionElements.forEach((element, index) => {
       element.addEventListener('click', () => {
@@ -627,33 +639,6 @@ const firebaseConfig = {
           }
       });
   });
-// Function to update password after reauthentication
-function updatePassword(newPassword, currentPassword) {
-  const user = auth.currentUser;
-
-  // Reauthenticate user with current email and password
-  signInWithEmailAndPassword(auth, user.email, currentPassword)
-      .then((userCredential) => {
-          // Password successfully reauthenticated
-          // Update password
-          updatePassword(userCredential, newPassword)
-              .then(() => {
-                  // Password updated successfully
-                  console.log("Password updated successfully.");
-                  alert("Password updated successfully.");
-              })
-              .catch((error) => {
-                  // An error occurred while updating the password
-                  console.error("Error updating password:", error);
-                  alert("Failed to update password. Please try again.");
-              });
-      })
-      .catch((error) => {
-          // Reauthentication failed
-          console.error("Reauthentication failed:", error);
-          alert("Reauthentication failed. Please check your current password.");
-      });
-}
 // Function to load user data into the form
 function loadUserDataHandler() {
   const user = auth.currentUser;
@@ -673,7 +658,6 @@ function loadUserDataHandler() {
               document.getElementById('lastName').value = userData.lastname || '';
               document.getElementById('email').value = userData.email || '';
               // Assuming user data includes old password, update if needed
-              document.getElementById('oldPassword').value = userData.password || '';
           } else {
               console.log("No data available for this user");
           }
@@ -682,53 +666,6 @@ function loadUserDataHandler() {
           console.error("Error fetching user data:", error);
       });
 }
-
-// Event listener for form submission
-const submitUpdatedUserData = document.getElementById('userForm');
-submitUpdatedUserData.addEventListener('submit', updateUserDataHandler);
-
-// Function to handle form submission for updating user data
-function updateUserDataHandler(event) {
-  event.preventDefault();
-
-  const user = auth.currentUser;
-  const userId = user.uid;
-
-  const firstName = document.getElementById('firstName').value;
-  const middleName = document.getElementById('middleName').value;
-  const lastName = document.getElementById('lastName').value;
-  const email = document.getElementById('email').value;
-  const oldPassword = document.getElementById('oldPassword').value;
-
-  // Call updatePassword function to update the password
-  updatePassword(newPassword);
-
-  // Update user data in the database
-  const userRef = ref(db, 'users/' + userId);
-
-  set(userRef, {
-      firstname: firstName,
-      middlename: middleName,
-      lastname: lastName,
-      email: email,
-      newPassword: newPassword // Optionally, update newPassword in the database as well
-  })
-  .then(() => {
-      console.log('User data updated successfully.');
-      // Optionally, clear the form fields after successful update
-      document.getElementById('firstName').value = '';
-      document.getElementById('middleName').value = '';
-      document.getElementById('lastName').value = '';
-      document.getElementById('email').value = '';
-      document.getElementById('oldPassword').value = '';
-      document.getElementById('newPassword').value = '';
-  })
-  .catch((error) => {
-      console.error('Error updating user data:', error);
-  });
-}
-
-
   // Showing add new task form
   const addNewForm =  document.getElementById('new-task-form-btn');
   const hideForm = document.getElementById('close');
@@ -903,11 +840,11 @@ document.addEventListener('DOMContentLoaded', function() {
 // Function to display the edit form with the task data
 function displayEditForm(taskData, taskKey) {
   const editFormContainer = document.querySelector('.edit-form-container');
-  const taskIdInput = editFormContainer.querySelector('#task-Id');
-  const taskNameInput = editFormContainer.querySelector('#task-name');
-  const taskDescriptionInput = editFormContainer.querySelector('#task-description');
-  const taskStartTimeInput = editFormContainer.querySelector('#task-start-time');
-  const taskDueTimeInput = editFormContainer.querySelector('#task-due-time');
+  const taskIdInput = editFormContainer.querySelector('#task_Id');
+  const taskNameInput = editFormContainer.querySelector('#task_name');
+  const taskDescriptionInput = editFormContainer.querySelector('#task_description');
+  const taskStartTimeInput = editFormContainer.querySelector('#task_start_time');
+  const taskDueTimeInput = editFormContainer.querySelector('#task_due_time');
 
   taskIdInput.value = taskKey;
   taskNameInput.value = taskData.taskTitle;
@@ -973,9 +910,9 @@ async function updateTask(taskKey, updatedTaskData) {
 }
 function displayStartTaskForm(taskData, taskKey) {
   const startTaskFormContainer = document.querySelector('.edit-form-container-2');
-  const taskIdInput = startTaskFormContainer.querySelector('#task-Id');
-  const taskStartTimeInput = startTaskFormContainer.querySelector('#task-start-time');
-  const taskDueTimeInput = startTaskFormContainer.querySelector('#task-due-time');
+  const taskIdInput = startTaskFormContainer.querySelector('#taskId');
+  const taskStartTimeInput = startTaskFormContainer.querySelector('#taskStartTime');
+  const taskDueTimeInput = startTaskFormContainer.querySelector('#taskDueTime');
 
   taskIdInput.value = taskKey;
   const timeZone = 'Africa/Nairobi';
@@ -1141,6 +1078,13 @@ async function endTaskHandler(taskKey, updatedTaskData) {
     if (snapshot.exists()) {
       // Get the existing data
       const existingData = snapshot.val();
+      // Check if the task is currently "In Progress"
+      if (existingData.status !== "In Progress") {
+        console.error('Task must be in progress to be marked as completed');
+        showMessageToTheUser('Task must be in progress to be marked as completed');
+        // Optionally, provide feedback to the user that the task is not in the right state
+        return; // Stop execution if the task is not in progress
+      }
 
       // Update the due time to current date and time (Date.now())
       updatedTaskData.dueTime = Date.now();

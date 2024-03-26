@@ -86,7 +86,7 @@
                             </div>
                             <div class=" tasks completed-tasks">
                                 <h4>Completed</h4>
-                                <div class="task-icon"><img src="/static/images/completed-task.png" alt="" srcset=""><span>0</span></div>
+                                <div class="task-icon"><img src="/static/images/completed-task.png" alt="" srcset=""><span id="completedTasks">0</span></div>
                             </div>
                         </div>
                     </div>
@@ -155,14 +155,6 @@
                             <label for="email"><ion-icon name="mail"></ion-icon> Email</label>
                             <input type="email" id="email" placeholder="Enter your email">
                         </div>
-                        <div class="form-group">
-                            <label for="oldPassword"><ion-icon name="lock-closed"></ion-icon> Old Password</label>
-                            <input type="password" id="oldPassword" placeholder="Enter your old password">
-                        </div>
-                        <div class="form-group">
-                            <label for="newPassword"><ion-icon name="lock-closed"></ion-icon> New Password</label>
-                            <input type="password" id="newPassword" placeholder="Enter your new password">
-                        </div>
                         <button type="submit">Update</button>
                     </form>
                 </div>                
@@ -206,15 +198,15 @@
                         <form id="start-task-form">
                             <div class="form-group">
                                 <label for="task-name">Task ID:</label>
-                                <input type="text" id="task-Id" name="task-Id" required>
+                                <input type="text" id="taskId" name="task-Id" required>
                               </div>
                             <div class="form-group">
                                 <label for="task-name">Start Time:</label>
-                                <input type="text" id="task-start-time" name="task-start-time" required>
+                                <input type="text" id="taskStartTime" name="task-start-time" required>
                             </div>
                             <div class="form-group">
                                 <label for="task-name">Due Time:</label>
-                                <input type="datetime-local" id="task-due-time" name="task-due-time" required>
+                                <input type="datetime-local" id="taskDueTime" name="task-due-time" required>
                             </div>
                             <div class="form-group">
                                 <button id="cancelBtn">Cancel</button>
@@ -342,27 +334,28 @@
                 </form>
             </div>
             <div class="edit-form-container">
+                <P>Edit Task</P>
                 <form id="edit-form">
                     <div id="closeBtn"><ion-icon name="close-outline"></ion-icon></div>
                     <div class="form-group">
                         <label for="task-name">Task ID:</label>
-                        <input type="text" id="task-Id" name="task-Id" required>
+                        <input type="text" id="task_Id" name="task-Id" required>
                       </div>
                     <div class="form-group">
                         <label for="task-name">Task Name:</label>
-                        <input type="text" id="task-name" name="task-name" required>
+                        <input type="text" id="task_name" name="task-name" required>
                     </div>
                     <div class="form-group">
                         <label for="task-description">Task Description:</label>
-                        <textarea id="task-description" name="task-description" rows="4" required></textarea>
+                        <textarea id="task_description" name="task-description" rows="4" required></textarea>
                     </div>
                     <div class="form-group">
                         <label for="task-name">Start Time:</label>
-                        <input type="text" id="task-start-time" name="task-start-time" required>
+                        <input type="text" id="task_start_time" name="task-start-time" required>
                     </div>
                     <div class="form-group">
                         <label for="task-name">Due Time:</label>
-                        <input type="text" id="task-due-time" name="task-due-time" required>
+                        <input type="text" id="task_due_time" name="task-due-time" required>
                     </div>
                     <div class="form-group">
                         <button type="submit">Save Changes</button>
@@ -377,19 +370,19 @@
                         <div class="content">
                             <div class="left-side">
                                 <div class="address details">
-                                    <i class="fa fa-map-marker"></i>
+                                    <ion-icon name="location-outline"></ion-icon>
                                     <div class="topic">Address</div>
                                     <div class="text-one"> Galanema, NP12</div>
                                     <div class="text-two">Chonyi 03</div>
                                 </div>
                                 <div class="phone details">
-                                    <ion-icon name="logo-wechat"></ion-icon>
+                                    <ion-icon name="call-outline"></ion-icon>
                                     <div class="topic">Phone</div>
                                     <div class="text-one"> +254719 454 431</div>
                                     <div class="text-two">+254711 274 834</div>
                                 </div>
                                 <div class="email details">
-                                    <i class="fa fa-envelope"></i>
+                                    <ion-icon name="mail-outline"></ion-icon>
                                     <div class="topic">Email</div>
                                     <div class="text-one"> fixtone94tec@gmail.com</div>
                                     <div class="text-two">info.damunchi@94tec.com</div>
