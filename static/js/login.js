@@ -37,6 +37,7 @@ getStartedBtn.addEventListener('click', showLoginContainer);
 hideContainer.addEventListener('click', () =>{
     container.classList.remove('showContainer');
 });
+
 // firebase Set up
 import {
     getAuth,
@@ -86,19 +87,19 @@ signupForm.addEventListener('submit', (e)=>{
             email: email,
             password: password,
         })
-        alert("User Created Successful");
+        showMessageToTheUser('User Created Successful');
         signupForm.reset();
         toggleFunction();
     })
     .catch((error) => {
-        alert("Failed to create User contact your Adminstrator");
+        showMessageToTheUser("Failed to create User contact your Adminstrator", true);
         console.log(error.code);
         console.log(error.message);
     })
 })
 // toggle function
 function toggleFunction (){
-    const container = document.querySelector('.container.active .sign-in');
+    const container = document.querySelector('.container.active .sign-out');
     container.style. transform = 'translateX(100%)';
 }
 //login
@@ -120,17 +121,40 @@ loginForm.addEventListener('submit', (e)=>{
                 }))
                 sessionStorage.setItem("user-creds", JSON.stringify(cred.user));
                 console.log(snapshot.val().name);
+                showMessageToTheUser('You have successfully Logged in');
                 loginForm.reset();
                 window.location.href = 'index.html';
             }
         })
     })
     .catch((error) => {
-        alert(error.message);
+        showMessageToTheUser(error.message, true);
         console.log(error.code);
         console.log(error.message);
     })
 
 })
+function showMessageToTheUser(message, isError = false) {
+    const toastElement = document.getElementById('toastMessage');
+    if (toastElement === null) {
+        console.error('toastMessage element not found!');
+        return; // Exit the function early if the element is not found
+    }
+    toastElement.textContent = message;
+
+    if (isError) {
+        toastElement.style.backgroundColor = '#ff6347'; // Red color for error messages
+    } else {
+        toastElement.style.backgroundColor = '#28a745'; // Green color for success messages
+    }
+
+    // Show the toast message
+    toastElement.style.opacity = 1;
+
+    // Animate the toast message
+    setTimeout(() => {
+        toastElement.style.opacity = 0;
+    }, 5000);
+}
 
 

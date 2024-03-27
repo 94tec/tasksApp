@@ -162,10 +162,37 @@
         </section>
         <section id = "home" class = "finishedTasks">
             <div class="task-pane">
-                <div class="top-nav">  
-                    <div class="new-task">
-                        <button type="button" id="new-task-form-btn"><ion-icon name="add-outline"></ion-icon></button>
-                    </div>
+                <div class="top-nav">
+                    <button type="button" id="ongoingBtn">Ongoing Tasks</button>
+                    <button type="button" id="pendingBtn">Pending Tasks</button>
+                    <button type="button" id="completedBtn">Completed Tasks</button>
+                    <button type="button" id="new-task-form-btn"><ion-icon name="add-outline"></ion-icon>Add a new task</button>
+                </div>
+                <div id="ongoingTasksList" style="display: none;">
+                    <h4 style="text-align: center">In progress tasks Lists</h4>
+                    <button type="button" class="close-button" id="closeOngoingBtn"><ion-icon name="close-outline"></ion-icon></button>
+                    <!-- Define your ongoing tasks list here -->
+                    <ul>
+                        <li>
+                        </li>
+                    </ul>
+                </div>
+                <div id="pendingTasksList" style="display: none;">
+                    <h4 style="text-align: center">Pending tasks Lists</h4>
+                    <button type="button" class="close-button" id="closePendingBtn"><ion-icon name="close-outline"></ion-icon></button>
+                    <!-- Define your pending tasks list here -->
+                    <ul>
+                        <li></li>
+                    </ul>
+                </div>
+                
+                <div id="completedTasksList" style="display: none;">
+                    <h4 style="text-align: center">Completed tasks Lists</h4>
+                    <button type="button" class="close-button" id="closeCompletedBtn"><ion-icon name="close-outline"></ion-icon></button>
+                    <!-- Define your completed tasks list here -->
+                    <ul>
+                        <li></li>
+                    </ul>
                 </div>
                 <div class="main-widget-list" id="fade">
                     <div class="table-header">

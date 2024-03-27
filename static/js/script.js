@@ -1,3 +1,35 @@
+// Function to make links active based on scroll position
+function makeLinksActive() {
+  const sections = document.querySelectorAll('section'); // Get all sections
+  const navigationLinks = document.querySelectorAll('.navigation ul li a'); // Get navigation links
+
+  window.addEventListener('scroll', () => {
+      let current = '';
+
+      sections.forEach(section => {
+          const sectionTop = section.offsetTop; // Get the top position of the section
+          const sectionHeight = section.clientHeight; // Get the height of the section
+
+          if (pageYOffset >= sectionTop - sectionHeight / 3) {
+              // If scrolled to the section
+              current = section.getAttribute('id'); // Get the id of the section
+          }
+      });
+
+      navigationLinks.forEach(link => {
+          link.parentElement.classList.remove('active'); // Remove active class from all links
+          if (link.getAttribute('href').includes(current)) {
+              // If the link's href matches the current section
+              link.parentElement.classList.add('active'); // Add active class to the link
+          }
+      });
+  });
+}
+// Call the function when the DOM content is loaded
+document.addEventListener('DOMContentLoaded', () => {
+  makeLinksActive();
+});
+
 // Attach click event listener to navigation links
 const listItems = document.querySelectorAll('.navigation ul li');
 listItems.forEach(item => {
@@ -27,10 +59,6 @@ function showMessageToTheUser(message, isError = false) {
       toastElement.style.opacity = 0;
   }, 5000);
 }
-
-// Get references to the buttons
-const errorButton = document.getElementById('errorButton');
-const successButton = document.getElementById('successButton');
 
 function showToast(message) {
   var toast = document.getElementById("toast");
@@ -127,14 +155,6 @@ const firebaseConfig = {
   const auth = getAuth();
   const dbRef = ref(db);
 
-
-  function login(email, password) {
-    // Your login logic here
-    // Assume login is successful
-    showToast("Login successful! Welcome");
-  }
-  login();
-
   function logout() {
     signOut(auth).then(() => {
         // Sign-out successful
@@ -158,6 +178,17 @@ const firebaseConfig = {
   }
   onAuthStateChanged(auth, (user) => {
       if (user) {
+        // Schedule automatic sign-out after 2 hours
+        setTimeout(() => {
+          signOut(auth).then(() => {
+            window.location.href = 'login.html'; // Redirect to login page
+            showMessageToTheUser('You have been automatically signed out due to inactivity', true);
+          }).catch((error) => {
+              // An error happened
+              console.error(error);
+              showMessageToTheUser("Error logging out.");
+          });
+        }, 2 * 60 * 60 * 1000); // 2 hours in milliseconds
         // User is signed in, fetch first name and last name from database
         const userId = user.uid;
         const userTasksRef = ref(db, `users/${userId}/tasks`);
@@ -186,31 +217,6 @@ const firebaseConfig = {
           console.error("Error fetching user data:", error);
         });
 
-        // Query to filter tasks excluding those with status 'completed'
-        const tasksQuery = query(
-          userTasksRef,
-          orderByChild('status'), startAt(''), endAt('completed')
-        );
-
-        console.log(tasksQuery.toString()); // Log the query to see if it's constructed correctly
-        get(tasksQuery)
-        .then((snapshot) => {
-          const tasks = snapshot.val();
-          // Manually filter out tasks with status 'completed'
-          const filteredTasks = {};
-          snapshot.forEach((childSnapshot) => {
-            const task = childSnapshot.val();
-            if (task.status !== 'completed') {
-              filteredTasks[childSnapshot.key] = task;
-            }
-          });
-          console.log(filteredTasks);
-          // Process the tasks as needed
-        })
-        .catch((error) => {
-          console.error('Error retrieving tasks:', error);
-        });
-
         // // Reference to the tasks node for the user
         const completedStatus = 'completed'; // Corrected to match the status in the database
 
@@ -222,7 +228,33 @@ const firebaseConfig = {
            const totalTasks = snapshot.size;
            const userCompletedTasks = document.getElementById('completedTasks');
            userCompletedTasks.textContent = totalTasks.toString();
-           console.log("pending tasks", totalTasks)
+           if (snapshot.exists()) {
+            // Container element to hold the tasks
+            const completedTasksList = document.getElementById('completedTasksList');
+            // Clear previous results
+               // Iterate through the snapshot and log or process each task
+               let indexNo = 1;
+               snapshot.forEach((taskSnapshot) => {
+                   const task = taskSnapshot.val();
+                   const deadline = new Date(task.deadline);
+
+                   // Loop through the tasks array and create list items
+                    const listItem = document.createElement('li');
+                    listItem.classList.add('taskItem');
+                    listItem.innerHTML = `
+                        <div>${indexNo}</div>
+                        <div class="taskName">${task.taskTitle}</div>
+                        <div class="description">${task.taskDescription}</div>
+                        <div class="startTime">${task.startDate}</div>
+                        <div class="dueTime">${deadline.toLocaleString().substring(0, deadline.toLocaleString().length - 6)}</div>
+                        <div class="taskStatus">${task.status}</div>
+                    `;
+                    completedTasksList.appendChild(listItem);
+                    indexNo++;
+               });
+           } else {
+               console.log("No Pending tasks found...");
+           }
         }).catch((error) => {
             console.error("Error retrieving ongoing tasks: ", error);
        });
@@ -236,7 +268,33 @@ const firebaseConfig = {
           const totalTasks = snapshot.size;
           const userPendingTasks = document.getElementById('pendingTasks');
           userPendingTasks.textContent = totalTasks.toString();
-          console.log("pending tasks", totalTasks)
+          if (snapshot.exists()) {
+            // Container element to hold the tasks
+            const pendingTasksList = document.getElementById('pendingTasksList');
+            // Clear previous results
+               // Iterate through the snapshot and log or process each task
+               let indexNo = 1;
+               snapshot.forEach((taskSnapshot) => {
+                   const task = taskSnapshot.val();
+                   const deadline = new Date(task.deadline);
+
+                   // Loop through the tasks array and create list items
+                    const listItem = document.createElement('li');
+                    listItem.classList.add('taskItem');
+                    listItem.innerHTML = `
+                        <div>${indexNo}</div>
+                        <div class="taskName">${task.taskTitle}</div>
+                        <div class="description">${task.taskDescription}</div>
+                        <div class="startTime">${task.startDate}</div>
+                        <div class="dueTime">${deadline.toLocaleString().substring(0, deadline.toLocaleString().length - 6)}</div>
+                        <div class="taskStatus">${task.status}</div>
+                    `;
+                    pendingTasksList.appendChild(listItem);
+                    indexNo++;
+               });
+           } else {
+               console.log("No Pending tasks found...");
+           }
        }).catch((error) => {
            console.error("Error retrieving ongoing tasks: ", error);
       });
@@ -260,6 +318,7 @@ const firebaseConfig = {
             // Clear previous results
             taskContainer.innerHTML = ''
                // Iterate through the snapshot and log or process each task
+               let indexNo = 1;
                snapshot.forEach((taskSnapshot) => {
                    const task = taskSnapshot.val();
                    const deadline = new Date(task.deadline);
@@ -274,10 +333,25 @@ const firebaseConfig = {
                       <p class = "status">${task.status}</p>
                     `;
                    taskContainer.appendChild(taskElement);
+
+                   // Loop through the tasks array and create list items
+                    const ongoingTaskList = document.getElementById('ongoingTasksList');
+                    const listItem = document.createElement('li');
+                    listItem.classList.add('taskItem');
+                    listItem.innerHTML = `
+                        <div>${indexNo}</div>
+                        <div class="taskName">${task.taskTitle}</div>
+                        <div class="description">${task.taskDescription}</div>
+                        <div class="startTime">${task.startDate}</div>
+                        <div class="dueTime">${deadline.toLocaleString().substring(0, deadline.toLocaleString().length - 6)}</div>
+                        <div class="taskStatus">${task.status}</div>
+                    `;
+                    ongoingTaskList.appendChild(listItem);
+                    indexNo++;
                });
+
            } else {
                console.log("No In Progress tasks found...");
-               showMessageToTheUser("No In Progress tasks found...", true);
                const taskContainer = document.getElementById('task-container');
                // Clear previous results
                taskContainer.innerHTML = ''
@@ -289,6 +363,29 @@ const firebaseConfig = {
        }).catch((error) => {
            console.error("Error retrieving ongoing tasks: ", error);
       });
+      // Select close buttons
+      const closeOngoingBtn = document.getElementById('closeOngoingBtn');
+      const closePendingBtn = document.getElementById('closePendingBtn');
+      const closeCompletedBtn = document.getElementById('closeCompletedBtn');
+
+      // Select containers
+      const ongoingTasksContainer = document.getElementById('ongoingTasksList');
+      const pendingTasksContainer = document.getElementById('pendingTasksList');
+      const completedTasksContainer = document.getElementById('completedTasksList');
+
+      // Add event listeners
+      closeOngoingBtn.addEventListener('click', () => {
+          ongoingTasksContainer.style.display = 'none';
+      });
+
+      closePendingBtn.addEventListener('click', () => {
+          pendingTasksContainer.style.display = 'none';
+      });
+
+      closeCompletedBtn.addEventListener('click', () => {
+          completedTasksContainer.style.display = 'none';
+      });
+
       // Fetch tasks to display in the slide widget
       // Query to filter tasks excluding those with status 'completed'
       const activeTasksQuery = query(
@@ -1116,7 +1213,45 @@ async function endTaskHandler(taskKey, updatedTaskData) {
     // Handle error if needed
   }
 }
+// Get references to the buttons and lists
+const ongoingBtn = document.getElementById('ongoingBtn');
+const pendingBtn = document.getElementById('pendingBtn');
+const completedBtn = document.getElementById('completedBtn');
 
+const ongoingTasksList = document.getElementById('ongoingTasksList');
+const pendingTasksList = document.getElementById('pendingTasksList');
+const completedTasksList = document.getElementById('completedTasksList');
+
+// Add click event listeners to the buttons
+ongoingBtn.addEventListener('click', () => {
+    showList(ongoingTasksList);
+    hideListsExcept(ongoingTasksList);
+});
+
+pendingBtn.addEventListener('click', () => {
+    showList(pendingTasksList);
+    hideListsExcept(pendingTasksList);
+});
+
+completedBtn.addEventListener('click', () => {
+    showList(completedTasksList);
+    hideListsExcept(completedTasksList);
+});
+
+// Function to show a specific list
+function showList(list) {
+    list.style.display = 'block';
+}
+
+// Function to hide all lists except a specific list
+function hideListsExcept(exceptList) {
+    const allLists = [ongoingTasksList, pendingTasksList, completedTasksList];
+    allLists.forEach(list => {
+        if (list !== exceptList) {
+            list.style.display = 'none';
+        }
+    });
+}
 
 
 

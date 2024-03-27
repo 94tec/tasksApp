@@ -866,40 +866,89 @@ header{
     width: 100%;
     grid-area: top-widget;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
+    gap: 10px;
     align-items: center;
 
 }
-.task-pane .top-nav .new-task{
-    position: absolute;
-    top: 3px;
-    right: 16px;
-    width: 100px;
-    height: 50px;
+.task-pane .top-nav button{
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: var(--btn-color);
+    color: #fff;
+    border: none;
+    outline: none;
+    cursor: pointer;
+
+}
+.task-pane .top-nav #new-task-form-btn{
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 4px;
-    border-radius: 8px;
-    margin-bottom: 8px;
-
-}
-.task-pane .top-nav .new-task #new-task-form-btn{
-    width: 100%;
-    height: 100%;
-    border-radius: 8px;
-    background: var(--btn-color);
     cursor: pointer;
     outline: none;
     border: none;
 }
-.task-pane .top-nav .new-task #new-task-form-btn:hover{
+.task-pane .top-nav #new-task-form-btn:hover{
     opacity: .8;
 }
-.task-pane .top-nav .new-task #new-task-form-btn ion-icon{
-    font-size: 30px;
+.task-pane .top-nav  #new-task-form-btn ion-icon{
+    font-size: 20px;
     color: #fff;
 } 
+#ongoingTasksList, #pendingTasksList, #completedTasksList{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 960px;
+    background-color: #f9f9f9;
+    border-radius: 0.4rem;
+    padding: 10px;
+    box-shadow: 5px 10px 10px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+}
+#ongoingTasksList ul{
+    position: relative;
+    display: flex;
+    width: 100%;
+}
+#ongoingTasksList ul li{
+    width: 100%;
+    padding: 8px 8px;
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border-bottom: 2px solid rgba(124, 143, 143, 0.933);
+}
+.close-button{
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: none;
+    border: none;
+}
+.close-button ion-icon{
+    font-size: 24px;
+}
+.close-button ion-icon:hover{
+    transform: scale(1.2);
+}
+.taskItem{
+    width: 100%;
+    padding: 8px 8px;
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border-bottom: 2px solid rgba(176, 189, 189, 0.933);
+}
 .task-pane .main-widget-list{
     position: relative;
     grid-area: main-widget;
