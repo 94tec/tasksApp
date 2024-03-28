@@ -59,25 +59,6 @@ function showMessageToTheUser(message, isError = false) {
       toastElement.style.opacity = 0;
   }, 5000);
 }
-// Function to display toast messages with animation
-function trackTasksStatusMessage(message, isError = false) {
-  const toastElement = document.getElementById('trackMessage');
-  toastElement.textContent = message;
-
-  if (isError) {
-      toastElement.style.backgroundColor = '#ff6347'; // Red color for error messages
-  } else {
-      toastElement.style.backgroundColor = '#28a745'; // Green color for success messages
-  }
-
-  // Show the toast message
-  toastElement.style.opacity = 1;
-
-  // Animate the toast message
-  setTimeout(() => {
-      toastElement.style.opacity = 0;
-  }, 9000);
-}
 function showToast(message) {
   var toast = document.getElementById("toast");
   var toastMessage = document.getElementById("toast-message");
@@ -176,11 +157,11 @@ const firebaseConfig = {
   function logout() {
     signOut(auth).then(() => {
         // Sign-out successful
-        showToast("Logout successful!");
+        showMessageToTheUser("Logout successful!");
     }).catch((error) => {
         // An error happened
         console.error(error);
-        showToast("Error logging out.");
+        showMessageToTheUser("Error logging out.");
     });
   }
   function updateUI(user) {
@@ -190,6 +171,8 @@ const firebaseConfig = {
         // User is authenticated
         // Call the trackTaskStatus function to start tracking task statuses
         trackTaskStatus();
+        // Call the trackTaskStatus function to start tracking task statuses
+        trackTasks();
         
         isLoggedIn.style.display = 'block';
     } else {
@@ -1233,6 +1216,18 @@ async function endTaskHandler(taskKey, updatedTaskData) {
     // Handle error if needed
   }
 }
+//Get reference to notification icon
+const notificationIcon = document.querySelector('.notification-icon');
+const closeButton = document.getElementById('closeButton');
+const ongoingTasksListNearDeadline = document.getElementById('ongoingTasksListNearDeadline');
+// Add click event listeners to the buttons
+notificationIcon.addEventListener('click', (e) => {
+  e.preventDefault();
+  ongoingTasksListNearDeadline.style.display = 'block';
+});
+closeButton.addEventListener('click', () => {
+  ongoingTasksListNearDeadline.style.display = 'none';
+})
 // Get references to the buttons and lists
 const ongoingBtn = document.getElementById('ongoingBtn');
 const pendingBtn = document.getElementById('pendingBtn');
@@ -1277,12 +1272,7 @@ function trackTaskStatus() {
   let taskCount = 0;
   const userId = auth.currentUser.uid;
   const userTasksRef = ref(db, `users/${userId}/tasks`);
-  // Fetch all active tasks and display 
-  const tasksQueryStatus = query(
-    userTasksRef,
-    orderByChild('status'), startAt(''), endAt('completed')
-  );
-  get(tasksQueryStatus)
+  get(userTasksRef)
     .then((snapshot) => {
       if (snapshot.exists()) {
         snapshot.forEach((taskSnapshot) => {
@@ -1292,21 +1282,37 @@ function trackTaskStatus() {
           const totalTime = dueTime - startTime;
           const remainingTime = dueTime - currentTime;
           const twentyPercentThreshold = totalTime * 0.2;
-          if (task.status !== "completed") {
-            if (remainingTime <= twentyPercentThreshold) {
-              taskCount++;
-              console.log(`Task "${task.taskTitle}" is within 20% of its deadline.`);
-              trackTasksStatusMessage(
-                `
-                Task "${task.taskTitle}" is close to its deadline.
-                Only ${(remainingTime / (1000 * 60 * 60)).toFixed(2)} hours left.
-                Please Finish your task before deadline ${dueTime}
-                `
-              );
-            }
+          const ongoingTasksListNearDeadline = document.getElementById('ongoingTasksListNearDeadline');
+            // Iterate through the snapshot and log or process each task
+            let indexNo = 1;
+            if (task.status !== "completed") {
+              if (remainingTime <= twentyPercentThreshold) {
+                taskCount++;
+                console.log(`Task "${task.taskTitle}" is within 20% of its deadline.`);
+                showMessageToTheUser(
+                  `
+                  Task "${task.taskTitle}" is close to its deadline.
+                  Only ${(remainingTime / (1000 * 60 * 60)).toFixed(2)} hours left.
+                  Please Finish your task before deadline ${task.deadline}
+                  `
+                );
+                // Loop through the tasks array and create list items
+                const listItem = document.createElement('li');
+                listItem.classList.add('taskItem');
+                listItem.innerHTML = `
+                    <div>${indexNo}</div>
+                    <div class="taskName">${task.taskTitle}</div>
+                    <div class="description">${task.taskDescription}</div>
+                    <div class="startTime">${task.startDate}</div>
+                    <div class="dueTime">${dueTime.toLocaleString().substring(0, dueTime.toLocaleString().length - 6)}</div>
+                    <div class="taskStatus">${task.status}</div>
+                `;
+                ongoingTasksListNearDeadline.appendChild(listItem);
+                indexNo++;
+              }
+              updateTaskNotificationCount(taskCount);
           }
         });
-        updateTaskNotificationCount(taskCount);
       } else {
         console.log('No tasks available.');
         updateTaskNotificationCount(0);
@@ -1319,6 +1325,79 @@ function trackTaskStatus() {
 function updateTaskNotificationCount(count) {
   document.getElementById('taskNotificationCount').textContent = count;
 }
+function trackTasks() {
+  const currentTime = new Date();
+  const userId = auth.currentUser.uid;
+  const userTasksRef = ref(db, `users/${userId}/tasks`);
+  
+  get(userTasksRef)
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        snapshot.forEach((taskSnapshot) => {
+          const task = taskSnapshot.val();
+          const dueTime = new Date(task.deadline);
+          if (task.status !== "completed") {
+          // Check if the task has not started and its deadline has passed
+          if (!task.started && dueTime < currentTime) {
+            // Automatically mark the task as completed
+            autoTaskHandler(taskSnapshot.key, task);
+          }
+        }
+        });
+      } else {
+        console.log('No tasks available.');
+      }
+    })
+    .catch((error) => {
+      console.error('Error getting task data:', error);
+    });
+}
+
+async function autoTaskHandler(taskKey, updatedTaskData) {
+  try {
+    const userId = auth.currentUser.uid;
+    const taskRef = ref(db, `users/${userId}/tasks/${taskKey}`);
+
+    // Retrieve the existing task data asynchronously
+    const snapshot = await get(taskRef);
+
+    if (snapshot.exists()) {
+      // Get the existing data
+      const existingData = snapshot.val();
+      // Check if the task is currently "Pending"
+      if (existingData.status !== "In Progress") {
+        showMessageToTheUser('Task must be In progress to be marked as completed');
+        console.error('Task must be In progress to be marked as completed');
+        // Optionally, provide feedback to the user that the task is not in the right state
+        return; // Stop execution if the task is not pending
+      }
+
+      // Set the due time to current date and time (Date.now())
+      updatedTaskData.dueTime = Date.now();
+
+      // Set the status to "completed"
+      updatedTaskData.status = "completed";
+
+      // Update the task data with merged data asynchronously
+      await set(taskRef, updatedTaskData);
+
+      console.log('Task data updated successfully');
+      showMessageToTheUser(`Task ID ${taskKey} Completed successfully`);
+      // Optionally provide user feedback here
+      document.getElementById('click-to-popup-task-data').style.display = 'none';
+      location.reload();
+    } else {
+      console.error('Task does not exist');
+      // Handle the case where the task does not exist
+    }
+  } catch (error) {
+    console.error('Error updating task data:', error);
+    // Handle error if needed
+  }
+}
+
+
+
 
 
 

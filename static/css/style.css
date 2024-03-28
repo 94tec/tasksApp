@@ -77,7 +77,9 @@ header{
     background: #fff;
     border-radius: .4rem;
   }
-  
+  .notification-icon:hover {
+    transform: scale(1.2) translateY(-14px);
+  }
   .badge {
     position: absolute;
     top: -8px;
@@ -94,7 +96,19 @@ header{
     justify-content: center;
 
   }
-  
+  #ongoingTasksListNearDeadline{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 960px;
+    max-width: 100%;
+    background-color: #f9f9f9;
+    border-radius: 0.4rem;
+    padding: 10px;
+    box-shadow: 5px 10px 10px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+}
 /* Dropdown Button */
 .profile-button {
     position: absolute;
@@ -822,50 +836,6 @@ header{
 .profile-card button[type="submit"]:hover {
     background-color: #218838;
 }
-
-@keyframes rotate {
-    0%{
-        transform: rotate(0deg);
-    }
-    100%{
-        transform: rotate(360deg);
-    }
-}
-.toast {
-    position: fixed;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #fff;
-    color: #21b94f;
-    padding: 10px 20px;
-    border-radius: 5px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: 999;
-}
-
-.toast-content {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-}
-
-.progress-bar {
-    position: relative;
-    width: 100%;
-    height: 5px;
-    background-color: #37e078;
-    margin-top: 10px;
-    border-radius: 2px;
-    animation: progress 6s linear forwards;
-}
-
-@keyframes progress {
-    0% { width: 100%; }
-    100% { width: 0; }
-}
-
 .task-pane{
     position: relative;
     top: 80px;
@@ -924,6 +894,18 @@ header{
     font-size: 20px;
     color: #fff;
 } 
+.toast_message{
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    z-index: 999;
+}
 #ongoingTasksList, #pendingTasksList, #completedTasksList{
     position: absolute;
     top: 50%;
@@ -1334,18 +1316,6 @@ header{
     background: var(--btn-color);
     border-radius: 8px;
     color: #f0e7e7;
-}
-#trackMessage{
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background-color: #333;
-        color: #fff;
-        padding: 10px 20px;
-        border-radius: 5px;
-        opacity: 0;
-        transition: opacity 0.3s ease-in-out;
-        z-index: 999;
 }
 .edit-form-container {
     display: none;

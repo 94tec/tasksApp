@@ -42,6 +42,14 @@
                     <ion-icon name="notifications-outline"></ion-icon> <!-- Assuming you're using FontAwesome for icons -->
                     <span class="badge" id="taskNotificationCount">0</span>
                 </div>
+                <div id="ongoingTasksListNearDeadline" style="display: none;">
+                    <h4 style="text-align: center">In progress tasks Lists needed an action </h4>
+                    <button type="button" class="close-button" id="closeButton"><ion-icon name="close-outline"></ion-icon></button>
+                    <!-- Define your ongoing tasks list here -->
+                    <ul>
+                        <li></li>
+                    </ul>
+                </div> 
                 <div class = "profile">
                     <div class = "profile-button" id="profile-button">
                         <label id="selected-link-active">My account</label>
@@ -132,12 +140,6 @@
                         </span>
                     </div>
                 </div>
-                <div id="toast" class="toast">
-                    <div class="toast-content">
-                        <span id="toast-message" class="message">This is a toast notification</span>
-                        <div class="progress-bar"></div>
-                    </div>
-                </div>
                 <!-- profile container -->
                 <div class="profile-card" id="profileContainer">
                     <div id="hideProfileBtn"><ion-icon name="close-outline"></ion-icon></div>
@@ -161,7 +163,7 @@
                         </div>
                         <button type="submit">Update</button>
                     </form>
-                </div>                
+                </div>               
             </div>
         </section>
         <section id = "home" class = "finishedTasks">
@@ -288,8 +290,7 @@
                     </form>
                 </div> 
                 <!-- Toast message container -->
-                <div class="toast-test" id="toastMessage"></div> 
-                <div class="toast-test" id="trackMessage"></div> 
+                <div class="toast_message" id="toastMessage"></div> 
                 <div class="bottom-widget">
                            
                 </div>
