@@ -38,6 +38,10 @@
                         <div class="indicator"></div>
                     </ul>
                 </div>
+                <div class="notification-icon">
+                    <ion-icon name="notifications-outline"></ion-icon> <!-- Assuming you're using FontAwesome for icons -->
+                    <span class="badge" id="taskNotificationCount">0</span>
+                </div>
                 <div class = "profile">
                     <div class = "profile-button" id="profile-button">
                         <label id="selected-link-active">My account</label>
@@ -62,7 +66,7 @@
                                 <span class="selected-link">Logout</span>
                             </a> 
                         </li>
-                </ul>
+                    </ul>
                 </div>  
             </header>
             <div class="dashboard">
@@ -285,6 +289,7 @@
                 </div> 
                 <!-- Toast message container -->
                 <div class="toast-test" id="toastMessage"></div> 
+                <div class="toast-test" id="trackMessage"></div> 
                 <div class="bottom-widget">
                            
                 </div>

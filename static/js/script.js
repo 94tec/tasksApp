@@ -59,7 +59,25 @@ function showMessageToTheUser(message, isError = false) {
       toastElement.style.opacity = 0;
   }, 5000);
 }
+// Function to display toast messages with animation
+function trackTasksStatusMessage(message, isError = false) {
+  const toastElement = document.getElementById('trackMessage');
+  toastElement.textContent = message;
 
+  if (isError) {
+      toastElement.style.backgroundColor = '#ff6347'; // Red color for error messages
+  } else {
+      toastElement.style.backgroundColor = '#28a745'; // Green color for success messages
+  }
+
+  // Show the toast message
+  toastElement.style.opacity = 1;
+
+  // Animate the toast message
+  setTimeout(() => {
+      toastElement.style.opacity = 0;
+  }, 9000);
+}
 function showToast(message) {
   var toast = document.getElementById("toast");
   var toastMessage = document.getElementById("toast-message");
@@ -170,6 +188,9 @@ const firebaseConfig = {
 
     if (user) {
         // User is authenticated
+        // Call the trackTaskStatus function to start tracking task statuses
+        trackTaskStatus();
+        
         isLoggedIn.style.display = 'block';
     } else {
         // User is not authenticated
@@ -295,9 +316,9 @@ const firebaseConfig = {
            } else {
                console.log("No Pending tasks found...");
            }
-       }).catch((error) => {
-           console.error("Error retrieving ongoing tasks: ", error);
-      });
+          }).catch((error) => {
+            console.error("Error retrieving ongoing tasks: ", error);
+        });
 
        // Reference to the tasks node for the user
        const statusToQuery = 'In Progress'; // Corrected to match the status in the database
@@ -685,6 +706,7 @@ const firebaseConfig = {
          // User is signed out
          console.log("User is signed out");
        }
+       updateUI(user);
     });
   // Get all elements with class "selection"
   const selectionElements = document.querySelectorAll('.selection');
@@ -1082,8 +1104,6 @@ async function startTask(taskKey, updatedTaskData) {
         document.getElementById('startTaskPopupConfirmation').style.visibility = 'hidden';
         // Change the icon of the start button for this specific row
         const startBtn = document.querySelector(`#startTaskBtn[data-task-key="${taskKey}"]`);
-        console.log('Task key:', taskKey);
-        console.log('Start button:', startBtn);
         if (startBtn) {
           const iconName = 'checkmark-circle-outline'
           startBtn.setAttribute('name', iconName);
@@ -1177,8 +1197,8 @@ async function endTaskHandler(taskKey, updatedTaskData) {
       const existingData = snapshot.val();
       // Check if the task is currently "In Progress"
       if (existingData.status !== "In Progress") {
-        console.error('Task must be in progress to be marked as completed');
         showMessageToTheUser('Task must be in progress to be marked as completed');
+        console.error('Task must be in progress to be marked as completed');
         // Optionally, provide feedback to the user that the task is not in the right state
         return; // Stop execution if the task is not in progress
       }
@@ -1252,6 +1272,55 @@ function hideListsExcept(exceptList) {
         }
     });
 }
+function trackTaskStatus() {
+  const currentTime = new Date();
+  let taskCount = 0;
+  const userId = auth.currentUser.uid;
+  const userTasksRef = ref(db, `users/${userId}/tasks`);
+  // Fetch all active tasks and display 
+  const tasksQueryStatus = query(
+    userTasksRef,
+    orderByChild('status'), startAt(''), endAt('completed')
+  );
+  get(tasksQueryStatus)
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        snapshot.forEach((taskSnapshot) => {
+          const task = taskSnapshot.val();
+          const dueTime = new Date(task.deadline);
+          const startTime = task.startDate ? new Date(task.startDate) : currentTime;
+          const totalTime = dueTime - startTime;
+          const remainingTime = dueTime - currentTime;
+          const twentyPercentThreshold = totalTime * 0.2;
+          if (task.status !== "completed") {
+            if (remainingTime <= twentyPercentThreshold) {
+              taskCount++;
+              console.log(`Task "${task.taskTitle}" is within 20% of its deadline.`);
+              trackTasksStatusMessage(
+                `
+                Task "${task.taskTitle}" is close to its deadline.
+                Only ${(remainingTime / (1000 * 60 * 60)).toFixed(2)} hours left.
+                Please Finish your task before deadline ${dueTime}
+                `
+              );
+            }
+          }
+        });
+        updateTaskNotificationCount(taskCount);
+      } else {
+        console.log('No tasks available.');
+        updateTaskNotificationCount(0);
+      }
+    })
+    .catch((error) => {
+      console.error('Error getting task data:', error);
+    });
+}
+function updateTaskNotificationCount(count) {
+  document.getElementById('taskNotificationCount').textContent = count;
+}
+
+
 
 
 
